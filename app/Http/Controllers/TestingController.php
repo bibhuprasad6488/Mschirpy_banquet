@@ -1,0 +1,177 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
+use App\Models\User;
+use App\Models\State;
+use App\Models\City;
+use Carbon\Carbon;
+use DB;
+
+class TestingController extends Controller
+{
+    public function create_role()
+    {
+        
+    }
+
+    public function create_permission()
+    {
+        // Categories
+        // Permission::create(['name' => 'categories.read']);
+        // Permission::create(['name' => 'categories.write']);
+        // Permission::create(['name' => 'categories.delete']);
+
+        //Sub Categories
+        // Permission::create(['name' => 'sub_categories.read']);
+        // Permission::create(['name' => 'sub_categories.write']);
+        // Permission::create(['name' => 'sub_categories.delete']);
+
+        //Venues
+        // Permission::create(['name' => 'venues.read']);
+        // Permission::create(['name' => 'venues.write']);
+        // Permission::create(['name' => 'venues.delete']);
+
+       // Items
+        // Permission::create(['name' => 'items.read']);
+        // Permission::create(['name' => 'items.write']);
+        // Permission::create(['name' => 'items.delete']);
+
+        //Packages
+        // Permission::create(['name' => 'packages.read']);
+        // Permission::create(['name' => 'packages.write']);
+        // Permission::create(['name' => 'packages.delete']);
+
+       // Cuisines
+        // Permission::create(['name' => 'cuisine.read']);
+        // Permission::create(['name' => 'cuisine.write']);
+        // Permission::create(['name' => 'cuisine.delete']);
+
+       // Staff
+       // Permission::create(['name' => 'staff.read']);
+       // Permission::create(['name' => 'staff.write']);
+       // Permission::create(['name' => 'staff.delete']);
+
+       // Vendor
+       // Permission::create(['name' => 'vendor_list.read']);
+       // Permission::create(['name' => 'vendor_list.write']);
+       // Permission::create(['name' => 'vendor_list.delete']);
+
+       //Roles
+       // Permission::create(['name' => 'role.read']);
+       // Permission::create(['name' => 'role.write']);
+       // Permission::create(['name' => 'role.delete']);
+
+       //Menu
+       // Permission::create(['name' => 'menu.read']);
+       // Permission::create(['name' => 'menu.write']);
+       // Permission::create(['name' => 'menu.delete']);
+
+      //Venue Type
+       Permission::create(['name' => 'venue_type.read']);
+       Permission::create(['name' => 'venue_type.write']);
+       Permission::create(['name' => 'venue_type.delete']);
+
+        //permission
+       //Permission::create(['name' => 'permission_list']);
+    }
+
+    // public function role_permission()
+    // {
+    //     $role = Role::where('name', 'super_admin')->first();
+    //     $permissions = Permission::whereIn('name', [
+    //         'staff_list',
+    //         'vendor_list',
+    //         'permission_list'
+    //     ])->get();
+    //     foreach ($permissions as $key => $permission) {
+    //         $permission->assignRole($role);
+    //     }
+
+        // $user = User::find(1);
+        // $user->assignRole('super_admin');
+    //}
+
+    public function addPermission()
+    {
+        $getall = Permission::get();
+        foreach ($getall as $key => $value) {
+            DB::table('role_has_permissions')->insert(
+                array(
+                    'permission_id'  => $value->id, 
+                    'role_id'   =>3
+                 )
+            );
+        }
+    }
+
+    public function testdate()
+    {
+          // $currentMonth = date("F", strtotime ( date( 'Y-m-d' ))) ;
+          // $months = [$currentMonth];
+          // for ($i = 1; $i <= 12; $i++) 
+          // {
+          //  $year = date("Y", strtotime( date( 'Y-m-d' )." -$i years"));
+          //    $months[$year] = date("F", strtotime( date( 'Y-m-d' )." -$i months"));
+          // }
+          // dd($months);
+        // echo implode(",",$months);
+      $state =  array
+        (
+            '1' => 'Andaman & Nicobar [AN]',
+            '2' => 'Andhra Pradesh [AP]',
+            '3' => 'Arunachal Pradesh [AR]',
+            '4' => 'Assam [AS]',
+            '5' => 'Bihar [BH]',
+            '6' => 'Chandigarh [CH]',
+            '7' => 'Chhattisgarh [CG]',
+            '8' => 'Dadra & Nagar Haveli [DN]',
+            '9' => 'Daman & Diu [DD]',
+            '10' => 'Delhi [DL]',
+            '11' => 'Goa [GO]',
+            '12' => 'Gujarat [GU]',
+            '13' => 'Haryana [HR]',
+            '14' => 'Himachal Pradesh [HP]',
+            '15' => 'Jammu & Kashmir [JK]',
+            '16' => 'Jharkhand [JH]',
+            '17' => 'Karnataka [KR]',
+            '18' =>' Kerala [KL]',
+            '19' => 'Lakshadweep [LD]',
+            '20' => 'Madhya Pradesh [MP]',
+            '21' => 'Maharashtra [MH]',
+            '22' => 'Manipur [MN]',
+            '23' => 'Meghalaya [ML]',
+            '24' => 'Mizoram [MM]',
+            '25' => 'Nagaland [NL]',
+            '26' => 'Odisha [OD]',
+            '27' => 'Pondicherry [PC]',
+            '28' => 'Punjab [PJ]',
+            '29' => 'Rajasthan [RJ]',
+            '30' => 'Sikkim [SK]',
+            '31' => 'Tamil Nadu [TN]',
+            '32' => 'Tripura [TR]',
+            '33' => 'Uttar Pradesh [UP]',
+            '34' => 'Uttaranchal [UT]',
+            '35' =>' West Bengal [WB]'
+        );
+        foreach($state as $k=> $sta){
+          $inputs = ['name'=>$sta];
+          State::create($inputs);
+        }
+    }
+
+    public function testFor()
+    {
+      $arr['aps'] = [
+        'alert'=>['title'=>'Title Here','body'=>'Body Here','subTitle'=>['name'=>'Ranjit','amount'=>'1000']],
+        'category'=>'Huge category'
+      ];
+      $arr['game_id']="fff";
+      dd(json_encode($arr));
+    }
+
+}
