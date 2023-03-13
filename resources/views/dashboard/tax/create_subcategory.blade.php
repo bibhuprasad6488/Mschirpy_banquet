@@ -38,8 +38,8 @@
                      <div class="row">
                         <div class="col-md-6">
                            <div class="form-group">
-                              <label>Tax Sub Category</label>
-                              <span class="text-danger">* (In Percentage)</span>
+                              <label>Percentage</label>
+                              <span class="text-danger">* (%)</span>
                               <input type="number" id="subcategory" name="subcategory" class="form-control" placeholder="Sub Category Name" required>
                            </div>
                         </div>
@@ -70,7 +70,8 @@
                      </div>
                      <div class="form-group">
                         <input type="submit" id="submit" class="btn btn-primary" name="submit" value="Save">
-                        <input type="reset" class="btn btn-secondary" value="Reset">
+                        <input type="reset" class="btn btn-warning" value="Reset">
+                        <a href="/list_subcat" class="btn btn-secondary mx-1">Back</a>
                      </div>
                   </form>
                </div>
