@@ -56,7 +56,7 @@
                                                     @foreach ($cuisines as $cuisine)
                                                         <option value="{{ $cuisine->id }}"
                                                             @foreach ($category->cuisines_id as $k => $v)
-                                   @if ($cuisine->id == $k) selected @endif @endforeach>
+                                                            @if ($cuisine->id == $k) selected @endif @endforeach>
                                                             {{ $cuisine->cuisine_name }}
                                                         </option>
                                                     @endforeach
@@ -102,15 +102,19 @@
                                             <label>Tax Type</label>
                                             <span class="text-danger">*</span>
                                             <select name="tax_type" class="form-control taxtype">
-                                                <option value="">Select Tax Type</option>
-                                                <option value="gst" {{ $category->tax_type == 'gst' ? 'selected' : '' }}>
-                                                    GST</option>
-                                                <option value="vat"
-                                                    {{ $category->tax_type == 'vat' ? 'selected' : '' }}>VAT</option>
+                                                <option selected disabled>Select Tax Type</option>
+                                                @if(!empty($taxsubcat))
+                                                    @foreach($taxsubcat as $taxcat)
+                                                        <option value="{{$taxcat->id}}"  
+                                                        @if($taxcat->id ==  $category->tax_type) selected @endif>
+                                                        {{$taxcat->category_name}}
+                                                    </option>
+                                                    @endforeach
+                                                @endif
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Tax Percent</label>
                                             <span class="text-danger">*</span>
@@ -128,7 +132,7 @@
                                                 @endif
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Status</label>

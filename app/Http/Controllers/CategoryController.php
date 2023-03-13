@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Category;
+use App\Models\TaxCategory;
 use App\Models\Cuisine;
 use Auth;
 
@@ -17,8 +18,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        $taxsubcat = TaxCategory::orderBy('id', 'DESC')->pluck('category_name');
         $categories = Category::orderBy('id', 'DESC')->get();
-        return view('dashboard.category.index', compact('categories'));
+        return view('dashboard.category.index', compact('categories','taxsubcat'));
     }
 
     /**
@@ -29,7 +31,9 @@ class CategoryController extends Controller
     public function create()
     {
         $cuisines = Cuisine::where(['status' => 1])->orderBy('id', 'DESC')->get();
-        return view('dashboard.category.create', compact('cuisines'));
+        $taxsubcat = TaxCategory::orderBy('id', 'DESC')->get();
+        // dd($taxsubcat);
+        return view('dashboard.category.create', compact('cuisines','taxsubcat'));
     }
 
     /**
@@ -52,7 +56,7 @@ class CategoryController extends Controller
         }
         $data['cuisines_id'] = $cuisineData;
         $data['tax_type'] = $data['tax_type'];
-        $data['tax_percent'] = $data['tax_percent'];
+        // $data['tax_percent'] = $data['tax_percent'];
         $data['user_id'] = Auth::user()->id;
         $data['slug'] = $this->slug($data['category_name']);
         try {
@@ -84,8 +88,10 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Category::find($id);
+        $taxsubcat = TaxCategory::orderBy('id', 'DESC')->get();
+        // dd($category);
         $cuisines = Cuisine::orderBy('id', 'DESC')->get();
-        return view('dashboard.category.edit', compact('category', 'cuisines'));
+        return view('dashboard.category.edit', compact('category', 'cuisines','taxsubcat'));
     }
 
     /**
@@ -112,7 +118,7 @@ class CategoryController extends Controller
                     'cuisines_id' => $cuisineData,
                     'type' => $request->type,
                     'tax_type' => $request->tax_type,
-                    'tax_percent' => $request->tax_percent,
+                    // 'tax_percent' => $request->tax_percent,
                     'slug' => $this->slug($request->category_name),
                     'status' => $request->status
                 ]

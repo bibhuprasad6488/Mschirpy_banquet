@@ -109,13 +109,16 @@
                                             <label>Tax Type</label>
                                             <span class="text-danger">*</span>
                                             <select name="tax_type" class="form-control taxtype">
-                                                <option value="">Select Tax Type</option>
-                                                <option value="gst">GST</option>
-                                                <option value="vat">VAT</option>
+                                                <option selected disabled>Select Tax Type</option>
+                                                @if(!empty($taxsubcat))
+                                                @foreach($taxsubcat as $k => $v)
+                                                <option value="{{$v->id}}">{{$v->category_name}}</option>
+                                                @endforeach
+                                                @endif
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Tax Percent</label>
                                             <span class="text-danger">*</span>
@@ -123,7 +126,7 @@
                                                 <option value="">Select Tax Percentage</option>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Status</label>

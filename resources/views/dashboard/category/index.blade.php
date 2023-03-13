@@ -50,7 +50,7 @@
                                             <th>Cuisine Name</th>
                                             <th>Type</th>
                                             <th>Tax Type</th>
-                                            <th>Tax Percentage</th>
+                                            {{-- <th>Tax Percentage</th> --}}
                                             <th>Status</th>
                                             <th class="text-center">Action</th>
                                         </tr>
@@ -69,7 +69,7 @@
                                         <!--    <td>{{$val->cuisine->cuisine_name ?? ''}}</td> -->
                                             <td>{{$val->type}}</td>
                                             <td>{{$val->tax_type}}</td>
-                                            <td>{{$val->tax_percent}}%</td>
+                                            {{-- <td>{{$val->tax_percent}}%</td> --}}
                                             <td>
                                                 @if($val->status == 1)
                                                 <a href="#"  class="badge badge-success" onclick="changestatus_chk('{{$val->id}}','{{$val->status}}')">Active</a>
