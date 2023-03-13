@@ -42,7 +42,7 @@
 										<tr>
 											<th>#</th>
 											<th>Category Name</th>
-											<th>Subcategory Name</th>
+											<th>Percentage</th>
 											<th>Status</th>
 											<th class="text-center">Action</th>
 										</tr>

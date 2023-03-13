@@ -40,8 +40,8 @@
                     
                         <div class="col-md-6">
                            <div class="form-group">
-                              <label>Subcategory Name</label>
-                              <span class="text-danger">* (In Percentage)</span>
+                              <label>Percentage</label>
+                              <span class="text-danger">* (%)</span>
                               <input type="number" id="subcategory" name="subcategory" class="form-control" placeholder="Sub Category Name" required value="{{$subcat->subcat}}">
                            </div>
                         </div>
