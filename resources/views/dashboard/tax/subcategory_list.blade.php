@@ -16,7 +16,7 @@
                         </ul>
                     </div>
                     <div class="panel-heading col-md-2">
-                        <a href="/taxcreate_subcategory" class="btn btn-block btn-primary">Add Tax subcategory</a>
+                        <a href="/taxcreate_subcategory" class="btn btn-block btn-primary">Add Tax Subcategory</a>
                     </div>
                 </div>
             </div>
