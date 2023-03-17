@@ -263,8 +263,9 @@ input[type=number] {
 }
 
 label {
-    font-size: 300;
-    /* font-family: auto; */
+    /* font-size: 300; */
+    font-family: 'lato', sans-serif;
+    font-weight: 600;
 }
 
 .form-control {
@@ -409,6 +410,7 @@ h6 {
     font-weight: 600;
     line-height: 1.5;
 }
+
 .gallery-box {
     /* box-shadow: 9px 9px 9px 9px #e0e0e0; */
     padding: 20px;
@@ -518,6 +520,7 @@ h6 {
     position: relative;
     top: 232px;
     right: 10px;
+    color: #343030;
 }
 
 #fliterbtn::before {
@@ -781,7 +784,7 @@ h6 {
 
 .accordion {
     background-color: #fff;
-    color: #ff5a60;
+    color: #dc3545;
     cursor: pointer;
     padding: 18px;
     width: 100%;
@@ -791,12 +794,13 @@ h6 {
     font-size: 15px;
     transition: 0.4s;
     margin: 10px;
-    font-family: 'lato', sans-serif;
-    font-weight: 600
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
 
 }
-.panel p{
-    font-family: 'lato', sans-serif !important;
+
+.panel p {
+    font-family: 'lato', sans-serif;
     font-weight: 600;
 }
 
@@ -895,8 +899,8 @@ h6 {
 }
 
 .modal-c label {
-    /* font-family: 'lato', sans-serif; */
-    font-weight: 500;
+    font-family: 'lato', sans-serif;
+    font-weight: 600;
 }
 
 .modal-c input[type="text"] {
@@ -1602,29 +1606,34 @@ h6 {
 }
 
 .login-card label {
-    font-family: 'Playfair Display', sans-serif;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
 }
 
 .login-card .input_user {
     background: transparent !important;
     border: 1px solid #d4d2d2;
-    font-family: 'playfair Display', sans-serif;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
     color: #dee2e6;
     box-shadow: none !important;
 }
 
 .input_user::placeholder {
-    font-family: 'playfair Display', sans-serif;
+    font-family: 'Lato', sans-serif;
     color: #fff !important;
+    font-weight: 600;
 }
 
 .login-card form input[type=number] .input_user::-ms-value {
-    font-family: 'playfair Display', sans-serif;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
 }
 
 .input_user:focus {
     color: #d4d2d2 !important;
-    font-family: 'playfair Display', sans-serif;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
 }
 
 .login_btn {
