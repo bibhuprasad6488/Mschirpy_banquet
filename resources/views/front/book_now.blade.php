@@ -53,7 +53,7 @@
 </head>
 
 <body>
-    <main style="background-color:#ff5b61;" class="h-100">
+    <main style="background-color:#ff5a60 !important;" class="h-100">
 
         <div class="container  h-100">
             <div class="row  justify-content-center align-items-center h-100">

@@ -169,14 +169,14 @@
                                         @endforeach
                                     </select>
                                     <div class="input-group-append">
-                                    <button class="btn btn-success" style="background-color: #005121;" type="submit">ADD</button>
+                                    <button class="btn btn-primary"  type="submit">ADD</button>
                                     </div>
                                 </div>
                             </form>
                             @endif
 
 
-                            <a href="/booking-report" class="btn btn-secondary">Back</a>
+                            <a href="/report/booking-report" class="btn btn-secondary">Back</a>
                             <div class="form-div float-right">
                                 <form action="/final_price_update" method="post" enctype="multipart/form-data">
                                     @csrf

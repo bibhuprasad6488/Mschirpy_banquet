@@ -55,7 +55,7 @@
 <body>
 
 
-    <main style="background-color: #ff5b61;" class="h-100">
+    <main style="background-color: #ff5a60 !important;" class="h-100">
         <!--? slider Area Start-->
 
         <div class="container  h-100">

@@ -50,7 +50,6 @@
                                             <th>Cuisine Name</th>
                                             <th>Type</th>
                                             <th>Tax Type</th>
-                                            {{-- <th>Tax Percentage</th> --}}
                                             <th>Status</th>
                                             <th class="text-center">Action</th>
                                         </tr>
@@ -62,14 +61,21 @@
                                             <td>{{$key+1}}</td>
                                             <td style="text-transform: capitalize;">{{$val->category_name}}</td>
                                             <td>
-                                            <a href="#" class="viewCuisine"
-                                                data-id="{{ $val->id }}"><span
-                                                    class="badge badge-success">View Cuisines Name</span></a>
-                                                    </td>
-                                        <!--    <td>{{$val->cuisine->cuisine_name ?? ''}}</td> -->
+                                                <a href="#" class="viewCuisine"
+                                                    data-id="{{ $val->id }}">
+                                                    <span class="badge badge-success">View Cuisines Name</span>
+                                                </a>
+                                            </td>
                                             <td>{{$val->type}}</td>
-                                            <td>{{$val->tax_type}}</td>
-                                            {{-- <td>{{$val->tax_percent}}%</td> --}}
+                                            <td>
+                                                @if(!empty($taxsubcat))
+                                                @foreach($taxsubcat as $k=>$v)
+                                                    @if($v->id == $val->tax_type)
+                                                        {{$v->category_name}}
+                                                    @endif
+                                                @endforeach
+                                                @endif
+                                            </td>
                                             <td>
                                                 @if($val->status == 1)
                                                 <a href="#"  class="badge badge-success" onclick="changestatus_chk('{{$val->id}}','{{$val->status}}')">Active</a>

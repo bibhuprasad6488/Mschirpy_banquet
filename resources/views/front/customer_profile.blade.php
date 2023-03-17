@@ -47,7 +47,7 @@
                         </div>
 
                         <div class="col-lg-8">
-                            <div class="card card-b" style="height: 64% !important;">
+                            <div class="card card-b" style="height: 380px !important;">
                                 <div class="card-title text-dark">Booking History</div>
                                 <div class="card-body text-center " id="card-body" style="overflow-y: scroll;">
 

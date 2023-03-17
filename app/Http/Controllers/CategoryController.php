@@ -18,7 +18,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $taxsubcat = TaxCategory::orderBy('id', 'DESC')->pluck('category_name');
+        $taxsubcat = TaxCategory::orderBy('id', 'DESC')->get();
         $categories = Category::orderBy('id', 'DESC')->get();
         return view('dashboard.category.index', compact('categories','taxsubcat'));
     }

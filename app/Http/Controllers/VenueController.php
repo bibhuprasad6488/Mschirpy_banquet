@@ -1,16 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-
 use App\Models\Venue;
 use App\Models\Package;
 use App\Models\Venuetype;
 use App\Models\Amenity;
 use App\Models\VenueImage;
 use App\Libraries\CustomData;
-
+use DB;
 use Auth;
 
 class VenueController extends Controller
@@ -67,6 +65,7 @@ class VenueController extends Controller
             try {
                 $save = new Venue($data);
                 $venueSave = $save->save();
+                $imagearray = [];
                 if ($venueSave) {
                     if ($request->hasFile('image')) {
                     foreach ($request->file('image') as $img) {
@@ -74,12 +73,22 @@ class VenueController extends Controller
                         $extention=$file->getClientOriginalExtension();
                         $filename=time().rand().'.'.$extention;
                         $file->move(public_path('/storage/images/venues'),$filename);
-                        $venueimg = VenueImage::create(['venue_id' => $save->id, 'user_id'=> $save->user_id ,'image' => $filename]);
-                       $venueimg->save();
+                        array_push(
+                            $imagearray,array(
+                                'venue_id' => $save->id,
+                                'user_id' => $save->user_id,
+                                'image' => $filename,
+                                'created_at' => now(),
+                                'updated_at' => now()
+                            )
+                        );
                     }
                     }
+                $venueimgSave = VenueImage::insert($imagearray);
                 }
+                if($venueimgSave){
                 return redirect()->back()->with('success', 'Venue successfully saved.');
+                }
             } catch (\Exception $e) {
                 return redirect()->back()->with('error', $e->getMessage());
             }
@@ -139,6 +148,7 @@ class VenueController extends Controller
         try {
             $Updatevenues = Venue::where('id', $id)->first();
             $Updatevenues->update($data);
+            $imagearr = [];
             if ($Updatevenues) {
                 if ($request->hasFile('venue_image')) {
                     foreach ($request->file('venue_image') as $img) {
@@ -146,13 +156,23 @@ class VenueController extends Controller
                         $extention=$file->getClientOriginalExtension();
                         $filename=time().rand().'.'.$extention;
                         $file->move(public_path('/storage/images/venues'),$filename);
-                        $venueimg = VenueImage::create([ 'user_id' => $Updatevenues->user_id, 'venue_id' => $Updatevenues->id, 'image' => $filename]);
-                        $venueimg->save();
+
+                        array_push(
+                            $imagearr,array(
+                                'venue_id' => $Updatevenues->id,
+                                'user_id' => $Updatevenues->user_id,
+                                'image' => $filename,
+                                'created_at' => now(),
+                                'updated_at' => now()
+                        )
+                    );
                     }
                 }
+                $imgSave = VenueImage::insert($imagearr);
             }
-
+            if($imgSave){
             return redirect()->back()->with('success', 'Venue successfully updated.');
+            }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

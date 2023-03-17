@@ -10,7 +10,7 @@
         <div class=" d-flex align-items-center min">
             <div class="container" id="main">
                 <div class="card" style="border: none;">
-                    <div class="card-body" style="border: none;">
+                    <div class="card-body" style="border: none; background-color:#f4f6f8">
                         <div class="row ">
                             <div class="col-md-6 col-12">
 
