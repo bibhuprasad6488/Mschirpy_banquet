@@ -129,7 +129,7 @@
                            <div class="form-group">
                               <label>State</label>
                               <span class="text-danger">*</span>
-                              <select class="form-control" name="state" id="state">
+                              <select class="form-control" name="state" id="state" required>
                                  <option value="">Selct State</option>
                                  @if(!empty($states))
                                  @foreach($states as $state)
@@ -143,7 +143,7 @@
                            <div class="form-group">
                               <label>City</label>
                               <span class="text-danger">*</span>
-                              <select class="form-control" name="city" id="city">
+                              <select class="form-control" name="city" id="city" required>
                               @if(!empty($cities))
                               @foreach($cities as $city)
                               <option value="{{$city->id}}" {{$city->id == $business->city ? 'selected' : ''}}>{{$city->city_name}}</option>
