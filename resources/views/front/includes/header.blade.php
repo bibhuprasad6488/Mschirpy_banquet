@@ -99,7 +99,7 @@
                                 <div class="main-menu f-right d-none d-lg-block">
                                     <nav>
                                         <ul id="navigation">
-                                            <li><a href="/">Home</a></li>
+                                            <li><a href="/banquet/home">Home</a></li>
                                             <li><a href="#">Rooms</a></li>
                                             <li><a href="#">Dinning</a></li>
                                             <li><a href="#">Meeting & Events</a></li>

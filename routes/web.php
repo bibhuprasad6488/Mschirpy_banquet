@@ -228,8 +228,9 @@ Route::post('/supplier/delete_brand_price', 'IngredientItemController@delete_bra
 //     Route::get('/create', 'IndexController@create');
 // });
 
-// Route::get('/', 'Front\IndexController@index');
+// Route::get('/home', 'Front\IndexController@index');
 Route::prefix('banquet')->group(function () {
+    Route::get('/home','Front\IndexController@index');
     Route::post('/register', 'Front\IndexController@customer_register');
     Route::get('/login', 'Front\IndexController@customer_login');
     Route::get('/book_now', 'Front\IndexController@book_now');
