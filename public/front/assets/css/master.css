@@ -85,6 +85,12 @@ body {
     font-weight: 600;
 }
 
+.big-img .book1{
+    background-color: #ff5a60b0 !important;
+    font-size: 16px;
+    font-family: 'poppins';
+}
+
 .btn2::before {
     content: "";
     position: absolute;
@@ -160,7 +166,9 @@ body {
 }
 
 .header-area .main-header .main-menu ul li a {
-    color: darkgray;
+    color: #878787;
+    font-weight: 600 !important;
+    margin: 0 12px !important;
 }
 
 .header-area .main-header .main-menu ul li a:hover {
@@ -168,7 +176,7 @@ body {
     text-decoration: none !important;
 }
 
-.header-area .main-header .main-menu ul li a:active {
+.header-area .main-header .main-menu ul li  .active {
     color: #ff5a60 !important;
     text-decoration: underline !important;
 }
@@ -255,6 +263,7 @@ input::-webkit-inner-spin-button {
 
 ul {
     font-weight: 600;
+    margin: 0 35px !important;
 }
 
 /* Firefox */
@@ -293,7 +302,7 @@ label {
 
 
 .men {
-    background-color: #f4f6f8;
+    background-color: #fff;
     /* box-shadow: 2px 2px 1px 2px #fbf9f9; */
     padding: 31px;
 }
@@ -378,12 +387,26 @@ h6 {
     color: #ff5a60;
 }
 
+.gallery-area .nav-tabs .nav-item {
+    /*margin: 0 3px;*/
+    font-size: 15px;
+    padding: 3px 20px !important;
+    /*display: block;*/
+    color: #686767;
+    background-color: #fff;
+    border: 1px solid #ff5a60;
+    border-radius: 5px !important;
+    /*padding: 5px 5px 4px 7px !important;*/
+
+}
+
+
 .gallery-area .nav-tabs .nav-link.active {
-    background: #fff;
+    background: #ff5a60;
     margin: 0 3px;
-    color: #ff5a60;
-    font-size: 12px;
-    padding: 5px 22px;
+    color: #fff;
+    font-size: 15px;
+    /*padding: 4px 21px !important;*/
     border: 1px solid #ff5a60 !important;
     border: none;
     -webkit-transition: all 0s ease-out 0s;
@@ -421,8 +444,24 @@ h6 {
 }
 
 #galleryy-box {
-    background-image: linear-gradient(#fcfafa 44%, #f6eded8c 42%) !important;
+    background-image: linear-gradient(#fcfafa 44%, #3034340f 42%) !important;
+    margin: 10px 35px;
+    height: 240px;
 }
+
+#countVenue{
+    background-color: #fcfafa !important;
+    color: #636060ed;
+    border-radius: 50px;
+    border: 1px solid #636060ed !important;
+    padding: 6px 15px;
+}
+
+#countVenue:hover{
+    background-color:none !important;
+}
+
+
 
 #gallery-box {
     padding: 4px;
@@ -430,7 +469,8 @@ h6 {
     border: 1px solid #ff5a60;
     border-radius: 5px;
     background-color: #fff;
-    min-height: 300px !important;
+    /*min-height: 300px !important;*/
+    height: 340px !important;
 }
 
 #galleryy-boxx {
@@ -459,7 +499,7 @@ h6 {
     padding: 15px 42px 15px 42px;
     font-weight: 600;
     position: absolute;
-    top: 262px;
+    top: 250px;
     left: 35%;
     margin-bottom: 30px;
 }
@@ -532,8 +572,8 @@ h6 {
     color: white !important;
     padding: 1px 7px 1px 7px;
     border-radius: 50px;
-    left: 38%;
-    top: 4px;
+    left: 40%;
+    top: 10px;
 }
 
 #fil2 {
@@ -541,12 +581,12 @@ h6 {
     color: white !important;
     padding: 1px 7px 1px 7px;
     border-radius: 50px;
-    left: 38%;
-    top: 4px;
+    left: 40%;
+    top: 10px;
 }
 
 .gallery-box:hover {
-    box-shadow: 0px 0px 13px 2px #ff8686;
+    /*box-shadow: 0px 0px 13px 2px #ff8686;*/
     transition: all 0.1s ease-out 0.1s;
     background-color: white;
 }
@@ -576,9 +616,9 @@ h6 {
 }
 
 .c-head {
-    margin: 13px;
+    margin: 15px 11px;
     font-size: 16px !important;
-    font-family: 'Playfair Display', sans-serif;
+    font-family: 'lato';
     font-weight: 600;
     color: #000;
 }
@@ -591,6 +631,11 @@ h6 {
 
 .timing {
     margin: 10px;
+}
+
+#appcot{
+    font-family: 'lato' !important;
+    margin-left: 10px;
 }
 
 .addd {
@@ -628,7 +673,7 @@ h6 {
 }
 
 .area {
-    padding-left: 47px;
+    padding-left: 53px;
 }
 
 .gallery-area .gallery-box .single-gallery .big-img {
@@ -656,14 +701,20 @@ h6 {
 }
 
 #main .card-body p {
-    color: #343030 !important;
+    color: #343030c4 !important;
     font-family: 'lato', sans-serif;
+}
+
+#main .card-body #sf{
+    font-size: 35px !important;
+    color: #343030 !important;
 }
 
 .single-gallery p {
     color: #343030 !important;
     font-family: 'lato', sans-serif;
     font-weight: 600;
+    line-height: 22px;
 }
 
 .single-gallery .col-12 {
@@ -730,10 +781,11 @@ h6 {
 }
 
 .logo a img {
-    height: 120px;
+    height: 170px;
     position: fixed;
-    top: 22px !important;
+    top: 6px !important;
     left: 160px !important;
+    width: 137px;
 }
 
 .main-menu {
@@ -756,17 +808,7 @@ h6 {
     background-color: #ff5a60;
 }
 
-.gallery-area .nav-tabs .nav-item {
-    margin: 0 3px;
-    display: block;
-    color: #686767;
-    font-size: 12px;
-    background-color: #fff;
-    border: 1px solid #ff5a60;
-    border-radius: 5px !important;
-    padding: 5px 5px 4px 7px !important;
 
-}
 
 .min {
     min-height: 458px !important;
@@ -914,7 +956,7 @@ h6 {
     /* letter-spacing: 5px !important; */
     margin-bottom: 0px !important;
     margin-top: 0px !important;
-    font-family: 'playfair Display', sans-serif;
+    font-family: 'playfair Display', sans-serif !important;
 }
 
 .slider-area .hero-cap h2 .h6 {
@@ -988,8 +1030,8 @@ h6 {
 }
 
 .glry {
-    background-color: whitesmoke;
-    padding: 30px;
+    background-color: #8e8c8c1f;
+    padding: 30px 130px;
 }
 
 .badge {
@@ -1059,12 +1101,41 @@ h6 {
 
 #appit {
     margin-top: 25px !important;
-    font-family: 'Playfair Display';
+    font-family: 'lato';
     font-size: 20px !important;
     color: #343030;
+    font-weight: 600;
+}
+
+#cat_cusisine{
+    text-transform: uppercase !important;
+    font-family: 'lato';
+    font-weight: bold !important;
+}
+
+.properties__button #cat_btn .nav-tabs .nav-link{
+
+    /* margin: 0 3px; */
+    font-size: 15px;
+    padding: 3px 10px !important;
+    /* display: block; */
+    color: #686767;
+    background-color: #fff !important;
+    border: 1px solid #ff5a60;
+    border-radius: 5px !important;
+    /* padding: 5px 5px 4px 7px !important; */
+}
+
+.properties__button #cat_btn .nav-tabs  .active{
+    color: #ff5a60 !important;
+    border: 1px solid #ff5a60 !important;
+    padding: 3px 10px !important;
 }
 
 @media only screen and (max-width: 425px) {
+    .alert-block{
+        font-size: 13px !important;
+    }
     .carousel-control-next {
         right: 0px;
         top: 124px;
@@ -1091,6 +1162,35 @@ h6 {
         left: 25%;
         margin-bottom: 60px;
     }
+
+    #galleryy-box {
+    background-image: linear-gradient(#fcfafa 44%, #3034340f 42%) !important;
+    margin: 10px 1px;
+    height: 200px !important;
+}
+.area {
+    padding-left: 0px !important;
+    position: relative;
+    right:7%;
+}
+
+#countVenue{
+    font-size: 8px !important;
+    position: relative;
+    left: 35%;
+}
+.mobile_menu .slicknav_menu .slicknav_nav {
+    margin-top: 4px !important;
+    text-align: center !important;
+    position: absolute;
+    left: -34px;
+}
+
+
+.slicknav_nav li {
+    display: block;
+    border-bottom: 1px solid #ff5a60;
+}
 
     /*.modal.fade .modal-dialog {
   transform: translate3d(0, 70vh, 0);
@@ -1183,12 +1283,44 @@ h6 {
         border-radius: 8px;
     }
 
+    .properties__button #cat_btn .nav-tabs .nav-link {
+        margin: 8px 2px;
+        font-size: 11px;
+        padding: 3px 10px !important;
+        /* display: block; */
+        color: #686767;
+        background-color: #fff !important;
+        border: 1px solid #ff5a60;
+        border-radius: 5px !important;
+        /* padding: 5px 5px 4px 7px !important; */
+    }
+
+    #fil2 {
+        background-color: #ff5a60 !important;
+        color: white !important;
+        padding: 1px 9px 2px 7px;
+        border-radius: 50px;
+        left: 18%;
+        font-size: 12px;
+        top: 8px;
+    }
+
     #solid .hero__caption .text-center {
         font-size: 40px;
         margin-top: 100px;
         text-shadow: 2px 2px 2px #dc3545;
         font-weight: 600;
         /* font-size: 20px; */
+    }
+
+    #fil1 {
+        background-color: green !important;
+        color: white !important;
+        padding: 1px 9px 2px 7px;
+        border-radius: 50px;
+        left: 19%;
+        top: 8px;
+        font-size: 12px;
     }
 
 
@@ -1224,11 +1356,11 @@ h6 {
     }
 
     .ban1 {
-        margin-top: 20px !important;
+        margin-top: 15px !important;
     }
 
     .logo a img {
-        height: 120px;
+        height: 140px;
         position: fixed;
         top: 22px !important;
         left: 11px !important;
@@ -1387,6 +1519,13 @@ h6 {
     .header-area .main-header {
         padding: 60px 5px;
     }
+    .area {
+        padding-left: 0px !important;
+    }
+
+    #countVenue{
+        font-size: 8px !important;
+    }
 
 }
 
@@ -1543,12 +1682,15 @@ h6 {
         font-size: 20px;
     }
 
-
-
+    #main .card-body #sf {
+        font-size: 25px !important;
+        color: #343030 !important;
+    }
 
     .glry {
         background-color: whitesmoke;
         /*     margin-top: 60px;*/
+        padding: 30px;
 
     }
 

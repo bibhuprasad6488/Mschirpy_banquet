@@ -52,7 +52,7 @@
 
 </head>
 
-<body>
+<body style="background-color:#ff5a60 !important;">
     <main style="background-color:#ff5a60 !important;" class="h-100">
 
         <div class="container  h-100">
@@ -60,14 +60,22 @@
                 <div class="col-md-12 ">
                     <div class="card">
                         <div class="card-body">
+                            @if ($message = Session::get('error'))
+                                <div class="alert  alert-block" style="background-color: #ff5a60;">
+                                    <button type="button" class="close text-white" data-dismiss="alert">×</button>
+                                    <span style="color: #fff;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>  {{ $message }}</span>
+                                </div>
+                            @endif
                             <div class="card-title">Thank You For Choosing The Altius!</div>
+                            <form action="/banquet/register" method="post" class="form" enctype="multipart/form-data" >
+                                @csrf
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="">Name</label>
                                         <span class="text-danger">*</span>
                                         <input type="text" class="form-control" name="name" id="name"
-                                            minlength="3" placeholder="Your Name">
+                                            minlength="3" placeholder="Your Name" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -75,7 +83,7 @@
                                         <label for="">Event Date</label>
                                         <span class="text-danger">*</span>
                                         <input type="date" class="form-control" name="event_date" id="date"
-                                            minlength="3" aria-describedby="helpId" placeholder="DD/MM/YYYY">
+                                            minlength="3" aria-describedby="helpId" placeholder="DD/MM/YYYY" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -83,7 +91,7 @@
                                         <label for="">Email</label>
                                         <span class="text-danger">*</span>
                                         <input type="email" class="form-control" name="email" id="email"
-                                            aria-describedby="helpId" placeholder="Your Email">
+                                            aria-describedby="helpId" placeholder="Your Email" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
@@ -92,7 +100,7 @@
                                         <label for="">Start Time</label>
                                         <span class="text-danger">*</span>
 
-                                        <select name="start_time" class="form-control" id="start_time">
+                                        <select name="start_time" class="form-control" id="start_time" required>
                                             <option disabled selected>Select Start Time</option>
                                             @foreach (range(intval('00:00:00'), intval('24:00:00')) as $time)
                                                 <option value="{{ date('H:00', mktime($time + 1)) }}">
@@ -106,7 +114,7 @@
                                     <div class="form-group">
                                         <label for="">End Time</label>
                                         <span class="text-danger">*</span>
-                                        <select name="end_time" class="form-control" id="end_time">
+                                        <select name="end_time" class="form-control" id="end_time" required>
                                             <option disabled selected>Select End Time</option>
                                             @foreach (range(intval('00:30:00'), intval('24:30:00')) as $time)
                                                 <option value="{{ date('H:30', mktime($time + 1)) }}">
@@ -116,31 +124,46 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="">Phone</label>
                                         <span class="text-danger">*</span>
                                         <input type="number" class="form-control" name="mobile" id="mobile"
                                             pattern="/^-?\d+\.?\d*$/"
                                             onKeyPress="if(this.value.length==10) return false;"
-                                            aria-describedby="helpId" placeholder="Your Number">
+                                            aria-describedby="helpId" placeholder="Your Number" required>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="">Password</label>
+                                        <span class="text-danger">*</span>
+                                        <input type="password" class="form-control" name="password" id="password"
+                                            aria-describedby="helpId" placeholder="Your Password" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="">Confirm Password</label>
+                                        <input type="text" class="form-control" name="cpassword" id="cpassword"
+                                            aria-describedby="helpId" placeholder="Confirm Password">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="">Number Of Gathering</label>
                                         <span class="text-danger">*</span>
                                         <input type="number" pattern="/^-?\d+\.?\d*$/"
                                             onKeyPress="if(this.value.length==5) return false;" class="form-control"
                                             name="amount_of_gathering" id="people" aria-describedby="helpId"
-                                            placeholder="Number of Peoples">
+                                            placeholder="Number of Peoples" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="">What's the Occasion?</label>
                                         <span class="text-danger">*</span>
-                                        <select class="" name="type" id="party_id"
+                                        <select class="" name="party_id" id="party_id"
                                             aria-placeholder="Select Occasion" required>
                                             <option value="">Select Occasion</option>
                                             @if (!empty($parties))
@@ -166,8 +189,8 @@
                                             </a></p>
                                     </div>
                                 </div>
-
                             </div>
+                            </form>
                         </div>
                     </div>
 
@@ -177,70 +200,78 @@
 
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
         <script>
-            $('#Savebtn').click(function(e) {
-                e.preventDefault();
-                var name = $('#name').val();
-                var date = $('#date').val();
-                var email = $('#email').val();
-                var start_time = $('#start_time').val();
-                var end_time = $('#end_time').val();
-                var mobile = $('#mobile').val();
-                var amount_of_gathering = $('#people').val();
-                var party_id = $('#party_id').val();
-                if (name == '' || date == '' || email == '' || start_time == '' || end_time == '' || mobile == '' ||
-                    amount_of_gathering ==
-                    '' || party_id == '') {
-                    swal({
-                        icon: 'warning',
-                        text: 'Kindly fill all the fields, Thank you!',
-                        button: "Ok"
-                    }).then(function() {
-                        window.location.reload();
-                    });
-                    return false;
+            // $('#Savebtn').click(function(e) {
+            //     e.preventDefault();
+            //     var name = $('#name').val();
+            //     var date = $('#date').val();
+            //     var email = $('#email').val();
+            //     var start_time = $('#start_time').val();
+            //     var end_time = $('#end_time').val();
+            //     var mobile = $('#mobile').val();
+            //     var password = $('#password').val();
+            //     var amount_of_gathering = $('#people').val();
+            //     var party_id = $('#party_id').val();
+            //     if (name == '' || date == '' || email == '' || start_time == '' || end_time == '' || mobile == '' ||
+            //         password == '' || amount_of_gathering == '' || party_id == '') {
+            //         swal({
+            //             icon: 'warning',
+            //             text: 'Kindly fill all the fields, Thank you!',
+            //             button: "Ok"
+            //         }).then(function() {
+            //             window.location.reload();
+            //         });
+            //         return false;
 
-                } else {
-                    $.ajax({
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            customer_name: name,
-                            date: date,
-                            email_id: email,
-                            start_time: start_time,
-                            end_time: end_time,
-                            mobile: mobile,
-                            amount_of_gathering: amount_of_gathering,
-                            party_id: party_id
-                        },
-                        url: "/banquet/register",
-                        type: "post",
-                        // dataType: 'json',
-                        success: function(data) {
-                            // console.log(data);
-                            // return false;
+            //     } else {
+            //         $.ajax({
+            //             data: {
+            //                 _token: "{{ csrf_token() }}",
+            //                 customer_name: name,
+            //                 date: date,
+            //                 email_id: email,
+            //                 start_time: start_time,
+            //                 end_time: end_time,
+            //                 mobile: mobile,
+            //                 password: password,
+            //                 amount_of_gathering: amount_of_gathering,
+            //                 party_id: party_id
+            //             },
+            //             cache: false,
+            //             url: "/banquet/register",
+            //             type: "post",
+            //             // dataType: 'json',
+            //             success: function(data) {
+            //                 console.log(data);
+            //                 // return false;
 
-                            if (data == "success") {
-                                window.location.replace('/banquet/login');
-                            } else {
-                                if (data == 'mobile_exist') {
-                                    swal({
-                                        text: 'Mobile no already exist',
-                                        icon: "error",
-                                        button: "Okay"
-                                    });
-                                }
-                                if (data == 'email_exist') {
-                                    swal({
-                                        text: 'Email already exist',
-                                        icon: "error",
-                                        button: "Okay"
-                                    });
-                                }
-                            }
-                        }
-                    });
-                }
-            });
+            //                 if (data == "success") {
+            //                     swal({
+            //                         icon: 'success',
+            //                         text: 'Booking Successfully registered!',
+            //                         button: "Ok"
+            //                     }).then(function() {
+            //                     window.location.replace('/banquet/all-venues');
+            //                     });
+            //                 } else {
+            //                     if (data == 'mobile_exist') {
+            //                         swal({
+            //                             text: 'Mobile no already exist',
+            //                             icon: "error",
+            //                             button: "Okay"
+            //                         });
+            //                     }
+            //                     if (data == 'email_exist') {
+            //                         swal({
+            //                             text: 'Email already exist',
+            //                             icon: "error",
+            //                             button: "Okay"
+            //                         });
+            //                     }
+            //                 }
+            //             }
+            //         });
+            //     }
+            // });
 
 
             new TomSelect("#party_id", {
@@ -321,7 +352,7 @@
 
     </main>
 
-    {{-- <script>
+    <script>
         document.addEventListener('contextmenu', (e) => e.preventDefault());
 
         function ctrlShiftKey(e, keyCode) {
@@ -339,7 +370,7 @@
             )
                 return false;
         };
-    </script> --}}
+    </script>
     <script src="{{ asset('front/assets/js/vendor/modernizr-3.5.0.min.js') }}"></script>
     <!-- Jquery, Popper, Bootstrap -->
     <script src="{{ asset('front/assets/js/vendor/jquery-1.12.4.min.js') }}"></script>

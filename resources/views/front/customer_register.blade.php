@@ -45,17 +45,17 @@
     <link rel="stylesheet" href="{{ asset('front/assets/css/master.css') }}">
     <script src="jquery-3.6.1.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    {{-- <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script> --}}
     <style>
-        body::-webkit-scrollbar {
-            display: none;
-            /* overflow: hidden; */
-        }
+    body::-webkit-scrollbar {
+        display: none;
+        /* overflow: hidden; */
+    }
     </style>
 
 </head>
 
-<body>
+<body style="background-color:#ff5a60 !important;">
     <main style="background-color:#ff5a60 !important;" class="h-100">
         <!--? slider Area Start-->
 
@@ -66,8 +66,8 @@
                     <div class="card  text-white login-card">
                         <div class="d-flex justify-content-center">
                             <div class="brand_logo_container">
-                                <img src="{{ asset('front/assets/img/logo/logo-1.png') }}" class="brand_logo"
-                                    alt="Logo" height="100px">
+                                <img src="{{ asset('front/assets/img/logo/logo-1.png') }}" class="brand_logo" alt="Logo"
+                                    height="100px">
                             </div>
                         </div>
                         <div class="card-body">
@@ -75,16 +75,19 @@
                                 <div class="alert alert-success alert-block">
                                     <button type="button" class="close" data-dismiss="alert">×</button>
                                     <strong>{{ $message }}</strong>
-                                </div>
-                            @endif
-                            @if ($message = Session::get('error'))
-                                <div class="alert alert-danger alert-block">
-                                    <button type="button" class="close" data-dismiss="alert">×</button>
-                                    <strong>{{ $message }}</strong>
-                                </div>
-                            @endif --}}
+                        </div>
+                        @endif --}}
+                        @if ($message = Session::get('error'))
+                        <div class="alert  alert-block" style="background-color: #ff5a60; font-size: 13px;">
+                            <button type="button" class="close text-white" data-dismiss="alert">×</button>
+                            <span style="color: #fff;"><i class="fa fa-exclamation-triangle"
+                                    aria-hidden="true"></i>  {{ $message }}</span>
+                        </div>
+                        @endif
 
-                            <h2 class="fw-bold text-uppercase text-center text-white">Welcome</h2>
+                        <h2 class="fw-bold text-uppercase text-center text-white">Welcome</h2>
+                        <form action="/banquet/add_customer" method="POST" enctype="multipart/form-data">
+                            @csrf
                             <div class="row">
                                 <div class="col-md-12">
                                     <label class="">Name</label>
@@ -105,8 +108,8 @@
                                                 </i>
                                             </span>
                                         </div>
-                                        <input type="number" name="mobile" id="mobile"
-                                            class="form-control input_user" pattern="/^-?\d+\.?\d*$/"
+                                        <input type="number" name="mobile" id="mobile" class="form-control input_user"
+                                            pattern="/^-?\d+\.?\d*$/"
                                             onKeyPress="if(this.value.length==10) return false;"
                                             placeholder="Please Enter Number" required>
                                     </div>
@@ -122,61 +125,93 @@
                                             class="form-control input_user" placeholder="Please Enter email" required>
                                     </div>
 
-
-
+                                    <label class="">Password</label>
+                                    <div class="input-group  mb-4">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                        <input type="password" name="password" id="password"
+                                            class="form-control input_user" placeholder="Please Enter Password"
+                                            required>
+                                    </div>
 
                                     <div class="d-flex justify-content-center mt-3 login_container">
-                                        <button type="submit" name="submit" id="savbtn"
-                                            class="buttonn login_btn">Sign in</button>
+                                        <button type="submit" name="submit" id="savbtn" class="buttonn login_btn">Sign
+                                            in</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="text-center mt-2">
-                                <p class="mb-0 text-white">Already have an account ? <a href="/banquet/login"
-                                        class="text-white-50 fw-bold text-primary">Log in <i class="fa fa-sign-in"
-                                            aria-hidden="true"></i>
-                                    </a>
-                                </p>
-                            </div>
+                        </form>
 
+                        <div class="text-center mt-2">
+                            <p class="mb-0 text-white">Already have an account ? <a href="/banquet/login"
+                                    class="text-white-50 fw-bold text-primary">Log in <i class="fa fa-sign-in"
+                                        aria-hidden="true"></i>
+                                </a>
+                            </p>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
+        </div>
 
 
         <script>
-            $('#savbtn').on('click', function() {
+        // $('#savbtn').on('click', function() {
+        //     var customer_name = $('#customer_name').val();
+        //     var mobile = $('#mobile').val();
+        //     var email_id = $('#email_id').val();
+        //     var password = $('#password').val();
+        //     if (customer_name == '' || customer_name == null || customer_name == undefined || mobile ==
+        //         '' || mobile == null || mobile == undefined || email_id == '' || email_id == null ||
+        //         email_id == undefined || password == '' || password == null || password == undefined) {
+        //         swal({
+        //             text: 'All fields are required.',
+        //             icon: "warning",
+        //             button: "Okay",
+        //         });
+        //         return false;
+        //     } else {
+        //         $.ajax({
+        //             type: "POST",
+        //             url: "/banquet/add_customer",
+        //             data: {
+        //                 _token: "{{ csrf_token() }}",
+        //                 customer_name: customer_name,
+        //                 mobile: mobile,
+        //                 email_id: email_id,
+        //                 password: password
+        //             },
+        //             cache: false,
+        //             success: function(dataResult) {
+        //                 console.log(dataResult);
+        //                 var dataResult = JSON.parse(dataResult);
+        //                 if (dataResult.statusCode == 200) {
+        //                     swal({
+        //                         text: 'Registration successfull Go to Login!',
+        //                         icon: "success",
+        //                         button: "Okay",
+        //                     }).then(function() {
+        //                         window.location = "/banquet/all-venues";
+        //                     });
+        //                 } else {
+        //                     swal({
+        //                         text: 'Registration Unsuccessfull try again',
+        //                         icon: "error",
+        //                         button: "Okay",
+        //                     }).then(function() {
+        //                         location.reload();
+        //                     });
+        //                 }
+        //             }
 
-                var customer_name = $('#customer_name').val();
-                var mobile = $('#mobile').val();
-                var email_id = $('#email_id').val();
+        //         });
+        //     }
 
-                $.ajax({
-                    type: "POST",
-                    url: "/banquet/add_customer",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        customer_name: customer_name,
-                        mobile: mobile,
-                        email_id: email_id
-                    },
-                    cache: false,
-                    success: function(dataResult) {
-                        console.log(dataResult);
-                        var dataResult = JSON.parse(dataResult);
-                        if (dataResult.statusCode == 200) {
-                            swal('Thank You', 'Registration successfully!', 'success');
-                            window.location = "/banquet/login";
-                        } else {
-                            alert('Please fill all the field !');
-                        }
-                    }
-
-                });
-
-            });
+        // });
         </script>
 
     </main>
@@ -185,7 +220,7 @@
 
 
     @push('script')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/8.0.1/firebase-app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/8.0.1/firebase-app.js"></script>
     @endpush
 
     <script src="{{ asset('front/assets/js/vendor/modernizr-3.5.0.min.js') }}"></script>
@@ -230,6 +265,25 @@
     </script>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    function ctrlShiftKey(e, keyCode) {
+        return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
+    }
+
+    document.onkeydown = (e) => {
+        // Disable F12, Ctrl + Shift + I, Ctrl + Shift + J, Ctrl + U
+        if (
+            event.keyCode === 123 ||
+            ctrlShiftKey(e, 'I') ||
+            ctrlShiftKey(e, 'J') ||
+            ctrlShiftKey(e, 'C') ||
+            (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0))
+        )
+            return false;
+    };
+    </script>
 </body>
 
 </html>

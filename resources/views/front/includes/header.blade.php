@@ -46,21 +46,21 @@
 
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
-    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <style>
-        body::-webkit-scrollbar {
-            display: none;
-            /* overflow: hidden; */
-        }
+    body::-webkit-scrollbar {
+        display: none;
+        /* overflow: hidden; */
+    }
 
-        html {
-            scroll-behavior: smooth;
-        }
+    html {
+        scroll-behavior: smooth;
+    }
 
-        .swal-size-sm {
-            width: 200px !important;
-        }
+    .swal-size-sm {
+        width: 200px !important;
+    }
     </style>
 
     @stack('style')
@@ -68,29 +68,16 @@
 
 <body>
 
-    <!--? Preloader Start -->
-    {{-- <div id="preloader-active">
-        <div class="preloader d-flex align-items-center justify-content-center">
-            <div class="preloader-inner position-relative">
-                <div class="preloader-circle"></div>
-                <div class="preloader-img pere-text">
-                    <img src="assets/img/logo/logo-1.png" alt="">
-                </div>
-            </div>
-        </div>
-    </div> --}}
-    <!-- Preloader Start -->
     <header>
         <!--? Header Start -->
         <div class="header-area header-transparent">
-            <div class="main-header header-sticky">
+            <div class="main-header header-fixed">
                 <div class="container-fluid">
                     <div class="row align-items-center">
                         <!-- Logo -->
                         <div class="col-xl-2 col-lg-2 col-md-1">
                             <div class="logo">
-                                <a href="/"><img src="{{ asset('front/assets/img/logo/logo-1.png') }}"
-                                        alt=""></a>
+                                <a href="https://thealtius.com"><img src="{{ asset('front/assets/img/logo/logo-1.png') }}" alt=""></a>
                             </div>
                         </div>
                         <div class="col-xl-10 col-lg-10 col-md-10">
@@ -99,59 +86,72 @@
                                 <div class="main-menu f-right d-none d-lg-block">
                                     <nav>
                                         <ul id="navigation">
-                                            <li><a href="/banquet/home">Home</a></li>
-                                            <li><a href="#">Rooms</a></li>
-                                            <li><a href="#">Dinning</a></li>
-                                            <li><a href="#">Meeting & Events</a></li>
-                                            <li><a href="#">About</a></li>
-                                            <li><a href="#">Local Attraction</a></li>
-                                            <li><a href="#">Contact</a></li>
+                                            <li><a href="https://thealtius.com" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Home">Home</a></li>
+                                            <li><a href="https://thealtius.com/room/" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Rooms">Rooms</a></li>
+                                            <li><a href="https://thealtius.com/dining/" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Dinning">Dinning</a></li>
+                                            <li><a href="https://thealtius.com/meetings-events/"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Meeting & Events">Meeting & Events</a></li>
+                                            <li><a href="https://thealtius.com/about-us/" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="About">About</a></li>
+                                            <li><a href="https://thealtius.com/local-attraction/"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Local Attraction">Local Attraction</a></li>
+                                            <li><a href="https://thealtius.com/contact/" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Contact">Contact</a></li>
                                             @if (!session()->has('cid'))
-                                                <li><a href="/banquet/book_now">Book Now</a></li>
+                                            <li><a href="/banquet/book_now" class="menu-link menu-item {{ request()->is('banquet/book_now*') ? 'active' : '' }}" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Book Now">Book Now</a></li>
                                             @else
-                                                <li><a href="/banquet/all-venues">Book Now</a></li>
+                                            <li><a href="/banquet/all-venues" class="menu-link menu-item {{ request()->is('banquet/all-venues*') ? 'active' : '' }}" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Book Now">Book Now</a></li>
                                             @endif
                                             @if (!session()->has('cid'))
-                                                <li><a href="#"><span>Login</span> <i class="fa fa-sign-in"
-                                                            aria-hidden="true"></i>
-                                                    </a>
-                                                    <ul class="submenu">
-                                                        <li><a href="/banquet/login"><i class="fa fa-user"
-                                                                    aria-hidden="true"></i>
-                                                                <span>Customer</span></a></li>
-                                                        <li><a href="/login" target="_blank"><i class="fa fa-lock"
-                                                                    aria-hidden="true"></i>
-                                                                <span>Admin</span></a></li>
-                                                    </ul>
-                                                </li>
+                                            <li><a href="#"><span>Login</span> <i class="fa fa-sign-in"
+                                                        aria-hidden="true"></i>
+                                                </a>
+                                                <ul class="submenu">
+                                                    <li><a href="/banquet/login"><i class="fa fa-user"
+                                                                aria-hidden="true"></i>
+                                                            <span>Customer</span></a></li>
+                                                    <li><a href="/login" target="_blank"><i class="fa fa-lock"
+                                                                aria-hidden="true"></i>
+                                                            <span>Admin</span></a></li>
+                                                </ul>
+                                            </li>
                                             @else
-                                                <li>
-                                                    <a href="/banquet/profile">
-                                                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                                            <li>
+                                                <a href="/banquet/profile" class="menu-link menu-item {{ request()->is('banquet/profile*') ? 'active' : '' }}" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Profile">
+                                                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
 
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                   <a href="/banquet/cart">
-                                                        <i class="fa fa-shopping-cart cart" aria-hidden="true"></i>
-                                                        {{-- count(session()->get('cart'), COUNT_RECURSIVE); --}}
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/banquet/cart" class="menu-link menu-item {{ request()->is('banquet/cart*') ? 'active' : '' }}" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Cart">
+                                                    <i class="fa fa-shopping-cart cart" aria-hidden="true"></i>
+                                                    {{-- count(session()->get('cart'), COUNT_RECURSIVE); --}}
 
-                                                        <span class="badge badge-pill" id="cart_badge"></span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="/banquet/logout">
-                                                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                                    <span class="badge badge-pill" id="cart_badge"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/banquet/logout" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Logout">
+                                                    <i class="fa fa-sign-out" aria-hidden="true"></i>
 
-                                                    </a>
-                                                </li>
+                                                </a>
+                                            </li>
                                             @endif
                                         </ul>
                                     </nav>
                                 </div>
                             </div>
                         </div>
-
                         <!-- Mobile Menu -->
                         <div class="col-12">
                             <div class="mobile_menu d-block d-lg-none"></div>

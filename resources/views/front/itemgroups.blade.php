@@ -8,7 +8,7 @@
     </div>
     <!-- Nav Card -->
     @foreach ($val as $key_type => $val_type)
-        <h5 class="p_l">{{ $key_type }}</h5>
+        <h5 class="p_l text-bold">{{ $key_type }}.</h5>
         <div class="tab-content">
             <!-- card one -->
             <div class="tab-pane fade show active" id="nav-home">
@@ -52,7 +52,7 @@
                                         </span>
                                         <h4 class="c-head">{{ $val_item->name }}</h4>
                                         <p class="desc" style="text-transform: capitalize;">
-                                            {{ substr($val_item->description ?? '', 0, 30) }}
+                                            {{ substr($val_item->description ?? '', 0, 100) }}
                                         </p>
                                     </div>
                                 </div>

@@ -111,21 +111,21 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            {{-- @if ($message = Session::get('success'))
-                                <div class="alert alert-success alert-block">
-                                    <button type="button" class="close" data-dismiss="alert">×</button>
-                                    <strong>{{ $message }}</strong>
+                            @if ($message = Session::get('success'))
+                                <div class="alert alert-block" style="background-color: #ff5a60; font-size: 13px;">
+                                    <button type="button" class="close text-white" data-dismiss="alert">×</button>
+                                    <span style="color: #fff;">{{ $message }}</span>
                                 </div>
                             @endif
                             @if ($message = Session::get('error'))
-                                <div class="alert alert-danger alert-block">
-                                    <button type="button" class="close" data-dismiss="alert">×</button>
-                                    <strong>{{ $message }}</strong>
+                                <div class="alert  alert-block" style="background-color: #ff5a60; font-size: 13px;">
+                                    <button type="button" class="close text-white" data-dismiss="alert">×</button>
+                                    <span style="color: #fff;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>  {{ $message }}</span>
                                 </div>
-                            @endif --}}
-                            {{-- <form action="/banquet/login/otp" method="post" autocomplete="off"
+                            @endif
+                            <form action="/banquet/login/otp" method="post" autocomplete="off"
                                 enctype="multipart/form-data">
-                                @csrf --}}
+                                @csrf
                             <h2 class="fw-bold text-uppercase text-center text-white">Welcome</h2>
                             <div class="row">
                                 <div class="col-md-12">
@@ -140,6 +140,19 @@
                                             onKeyPress="if(this.value.length==10) return false;"
                                             placeholder="Please Enter Number" autocomplete="off" required>
                                     </div>
+                                    <label class="">Password</label>
+                                    <div class="input-group  mb-4">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                        <input type="password" name="password" id="password"
+                                            class="form-control input_user" 
+                                            placeholder="Please Enter Password" required>
+                                    </div>
+                                    <div class="input-group  mb-4">
+                                        <a href="#" class="text-white-100">Forgot Password ?</a>
+                                    </div>
                                     <div class="d-flex justify-content-center mt-3 login_container">
                                         <button type="submit" name="Login" class="buttonn login_btn">Log
                                             In</button>
@@ -147,7 +160,7 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- </form> --}}
+                            </form>
 
                             <div class="text-center mt-2">
                                 <p class="mb-0 text-white">Don't have an account ? <a href="/banquet/register"
@@ -163,7 +176,7 @@
             </div>
         </div>
 
-
+{{-- 
         <script>
             $('.login_btn').on('click', function() {
                 var mobile = $('#mobile').val();
@@ -200,7 +213,7 @@
                 });
             });
         </script>
-
+ --}}
 
         <!-- slider Area End-->
 

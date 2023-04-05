@@ -21,6 +21,7 @@ use App\Models\ContentManagement;
 use App\Models\Faq;
 use App\Models\CustomerExperience;
 use DateTime;
+use DB;
 use Hash;
 use Session;
 
@@ -36,8 +37,8 @@ class IndexController extends Controller
         $contents = ContentManagement::where('others', 'home')->first();
         $parties = Party::orderBy('id', 'DESC')->pluck('party_name', 'id');
         if (session()->get('cid')) {
-        return view('front.home',  compact('parties', 'contents'));
-        }else{
+            return view('front.home',  compact('parties', 'contents'));
+        } else {
             return redirect('/banquet/login');
         }
     }
@@ -52,25 +53,30 @@ class IndexController extends Controller
         $id = session()->get('cid');
         if ($id) {
             if ($request->isMethod('post')) {
-                if(!empty($request->date_check)){
-                    $searched_date = date('Y-m-d',strtotime($request->date_check));
-                }else{
+                if (!empty($request->date_check)) {
+                    $searched_date = date('Y-m-d', strtotime($request->date_check));
+                } else {
                     $searched_date = date('Y-m-d');
                 }
-            }else{
-                    $searched_date = date('Y-m-d');
+            } else {
+                $searched_date = date('Y-m-d');
             }
             $venues = Venue::orderBy('id', 'DESC')->with(['venueimage', 'booking'])->get();
-            if(!empty($venues)){
-                foreach($venues as $venue){
-                    $count_booked = Booking:: where('venue_id',$venue->id)->whereDate('booking_datetime','>=',$searched_date)->wheredate('booking_datetime','<=',$searched_date)->where('status','completed')->get()->count();
+            if (!empty($venues)) {
+                foreach ($venues as $venue) {
+                    $count_booked = Booking::where('venue_id', $venue->id)->whereDate('booking_datetime', '>=', $searched_date)->wheredate('booking_datetime', '<=', $searched_date)->where('status', 'completed')->get()->count();
                     $venue->bookCnt = $count_booked;
                 }
             }
+            $indoorVenues = Venue::where('venue_type', 1)->where('status', 1)->get()->count();
+            $outdoorVenues = Venue::where('venue_type', 2)->where('status', 1)->get()->count();
+            // dd($outdoorVenues);
             $contents = ContentManagement::where('others', 'all-venues')->with('page')->first();
-            
+
             $data['contents'] = $contents;
             $data['venues'] = $venues;
+            $data['indoorVenues'] = $indoorVenues;
+            $data['outdoorVenues'] = $outdoorVenues;
             $data['searched_date'] = $searched_date;
 
             return view('front.all_venues', $data);
@@ -82,57 +88,61 @@ class IndexController extends Controller
     public function venue($slug, $searched_date)
     {
         if (session()->get('cid')) {
-        $venue = Venue::where(['slug' => $slug])->with('venueimage')->first();
-        $faq = Faq::orderBy('id', 'DESC')->get();
-        $data['faq'] = $faq;
-        $data['venue'] = $venue;
-        $data['searched_date'] = $searched_date;
-        return view('front.single_venue', $data);
-    }
-    else{
-        return redirect('/banquet/login');
-    }
+            $venue = Venue::where(['slug' => $slug])->with('venueimage')->first();
+            $faq = Faq::orderBy('id', 'DESC')->get();
+            $data['faq'] = $faq;
+            $data['venue'] = $venue;
+            $data['searched_date'] = $searched_date;
+            return view('front.single_venue', $data);
+        } else {
+            return redirect('/banquet/login');
+        }
     }
 
 
     public function singlle_package($venue_slug, $package_slug, $searched_date, $cart_cat_id = null, $cart_package_id = null)
     {
+        if($cart_cat_id == null){
+         session()->forget('cart');
+         session()->forget('p_details');
+        }
         $id =  session()->get('cid');
         if ($id) {
-        // if ($modify != null && $modify != 'modify') {
-        //     session()->forget('p_details');
-        //     session()->forget('cart');
-        // }
-        session()->put('p_details', ['venue_slug' => $venue_slug, 'package_slug' => $package_slug, 'searched_date'=> $searched_date]);
+            // if ($modify != null && $modify != 'modify') {
+            //     session()->forget('p_details');
+            //     session()->forget('cart');
+            // }
 
-        $package = Package::where('slug', $package_slug)->first();
-        if (!empty($package->no_of_items)) {
-            $cats = Category::whereIn('id', array_keys((array) $package->no_of_items))->get();
+            session()->put('p_details', ['venue_slug' => $venue_slug, 'package_slug' => $package_slug, 'searched_date' => $searched_date]);
+
+            $package = Package::where('slug', $package_slug)->first();
+            if (!empty($package->no_of_items)) {
+                $cats = Category::whereIn('id', array_keys((array) $package->no_of_items))->get();
+            } else {
+                $cats = [];
+            }
+            // dd($cats);
+            $contents = ContentManagement::where('page_id', 8)->first();
+            $data['contents'] = $contents;
+            $data['package'] = $package;
+            $data['cats'] = $cats;
+            if ($cart_cat_id != null && $cart_package_id != null) {
+                $data['cart_cat_id'] = Crypt::decrypt($cart_cat_id);
+                $data['cart_package_id'] = Crypt::decrypt($cart_package_id);
+            } else {
+                $data['cart_cat_id'] = null;
+                $data['cart_package_id'] = null;
+            }
+            return view('front.single_package', $data);
         } else {
-            $cats = [];
+            return redirect('/banquet/login');
         }
-         // dd($cats);
-        $contents = ContentManagement::where('page_id', 8)->first();
-        $data['contents'] = $contents;
-        $data['package'] = $package;
-        $data['cats'] = $cats;
-        if($cart_cat_id != null && $cart_package_id != null){
-            $data['cart_cat_id'] = Crypt::decrypt($cart_cat_id);
-            $data['cart_package_id'] = Crypt::decrypt($cart_package_id);
-        }else{
-            $data['cart_cat_id'] = null;
-            $data['cart_package_id'] = null;
-        }
-        return view('front.single_package', $data);
-    }else{
-        return redirect('/banquet/login');
-    }
     }
 
     public function showitems_cat(Request $request)
     {
         $cat_data = Category::where('id', $request->cat_id)->first();
-        $allmenus_with_arr = $this->__cuisine_wise_item($cat_data,$request->search);
+        $allmenus_with_arr = $this->__cuisine_wise_item($cat_data, $request->search);
         $allmenus = $allmenus_with_arr['menu_arr'];
         $totalitems = $allmenus_with_arr['item_counts'];
         $package_data = Package::where('id', $request->package_id)->first();
@@ -154,40 +164,39 @@ class IndexController extends Controller
         return $data;
     }
 
-    private function __cuisine_wise_item($cat_data, $search='')
+    private function __cuisine_wise_item($cat_data, $search = '')
     {
         $menu_arr = [];
         $itemCount = 0;
-        if(!empty($cat_data)){
-            foreach($cat_data->cuisines_id as $k => $v){
-                if($search !=''){
-                    if($search == 'veg'){
-                        $vegmenu = Menu::where(['category_id'=>$cat_data->id, 'cuisine_id'=>$k, 'menu_type'=>'Veg'])->get();
+        if (!empty($cat_data)) {
+            foreach ($cat_data->cuisines_id as $k => $v) {
+                if ($search != '') {
+                    if ($search == 'veg') {
+                        $vegmenu = Menu::where(['category_id' => $cat_data->id, 'cuisine_id' => $k, 'menu_type' => 'Veg'])->get();
                         $itemCount += $vegmenu->count();
-                        if(!empty($vegmenu) && $vegmenu->count() > 0){
-                            $menu_arr[$v]['Veg']= $vegmenu;
+                        if (!empty($vegmenu) && $vegmenu->count() > 0) {
+                            $menu_arr[$v]['Veg'] = $vegmenu;
                         }
-                    }else{
-                        $nonvegmenu = Menu::where(['category_id'=>$cat_data->id, 'cuisine_id'=>$k, 'menu_type'=>'Non-veg'])->get();
+                    } else {
+                        $nonvegmenu = Menu::where(['category_id' => $cat_data->id, 'cuisine_id' => $k, 'menu_type' => 'Non-veg'])->get();
                         $itemCount += $nonvegmenu->count();
-                        if(!empty($nonvegmenu) && $nonvegmenu->count() > 0){
-                            $menu_arr[$v]['Non-veg']= $nonvegmenu;
+                        if (!empty($nonvegmenu) && $nonvegmenu->count() > 0) {
+                            $menu_arr[$v]['Non-veg'] = $nonvegmenu;
                         }
                     }
-                }else{
-                    $vegmenu = Menu::where(['category_id'=>$cat_data->id, 'cuisine_id'=>$k, 'menu_type'=>'Veg'])->get();
+                } else {
+                    $vegmenu = Menu::where(['category_id' => $cat_data->id, 'cuisine_id' => $k, 'menu_type' => 'Veg'])->get();
                     $itemCount += $vegmenu->count();
-                    if(!empty($vegmenu) && $vegmenu->count() > 0){
-                        $menu_arr[$v]['Veg']= $vegmenu;
+                    if (!empty($vegmenu) && $vegmenu->count() > 0) {
+                        $menu_arr[$v]['Veg'] = $vegmenu;
                     }
 
-                    $nonvegmenu = Menu::where(['category_id'=>$cat_data->id, 'cuisine_id'=>$k, 'menu_type'=>'Non-veg'])->get();
+                    $nonvegmenu = Menu::where(['category_id' => $cat_data->id, 'cuisine_id' => $k, 'menu_type' => 'Non-veg'])->get();
                     $itemCount += $nonvegmenu->count();
-                    if(!empty($nonvegmenu) && $nonvegmenu->count() > 0){
-                        $menu_arr[$v]['Non-veg']= $nonvegmenu;
+                    if (!empty($nonvegmenu) && $nonvegmenu->count() > 0) {
+                        $menu_arr[$v]['Non-veg'] = $nonvegmenu;
                     }
-              }
-                
+                }
             }
         }
         return ['menu_arr' => $menu_arr, 'item_counts' => $itemCount];
@@ -206,54 +215,51 @@ class IndexController extends Controller
 
     public function customer_register(Request $request)
     {
-
         if ($request->isMethod('post')) {
-            $data['customer_name'] = $request->customer_name;
-            $data['email_id'] = $request->email_id;
-            $data['mobile'] = $request->mobile;
-            // $data['password'] = Hash::make($request->password);
-            // $recordExist = $this->validate($request, [
-            //     'customer_name' => 'required',
-            //     'email_id' => 'required|unique:customers',
-            //     'mobile' => 'required|unique:customers'
-
-            // ]);
-            $mobileExist = Customer::where('mobile', $request->mobile)->get()->count();
-            $emailExist = Customer::where('email_id', $request->email_id)->get()->count();
+            $mobile = trim($request->mobile);
+            $email = trim($request->email);
+            $mobileExist = Customer::where('mobile', $mobile)->get()->count();
+            $emailExist = Customer::where('email_id', $email)->get()->count();
             if ($mobileExist > 0) {
-                $msg = "mobile_exist";
-                return $msg;
+                $msg = "Mobile is already registered";
+                return redirect()->back()->with('error', $msg);
             }
             if ($emailExist > 0) {
-                $msg = "email_exist";
-                return $msg;
+                $msg = "Email is already registered";
+                return redirect()->back()->with('error', $msg);
             }
+            DB::beginTransaction();
             try {
-                $save = new Customer($data);
+                $cus_data = [
+                    'customer_name' => $request->name,
+                    'email_id' => $email,
+                    'mobile' => $mobile,
+                    'password' => Hash::make($request->password)
+                ];
+                $save = new Customer($cus_data);
                 $saveCust = $save->save();
-
                 if ($saveCust) {
                     $cust_id = $save->id;
                     $eventarr = [
                         'customer_id' => $cust_id,
-                        'event_date' => $request->date,
+                        'event_date' => $request->event_date,
                         'start_time' => $request->start_time,
                         'end_time' => $request->end_time,
                         'amount_of_gathering' => $request->amount_of_gathering,
                         'type' => $request->party_id
                     ];
+                    // return $eventarr;
+                    // exit();
 
                     $save = new Event($eventarr);
                     $allsave = $save->save();
-                    if ($allsave) {
-                        return "success";
-                    } else {
-                        return "error";
-                    }
+                    session()->put('cid', $cust_id);
                 }
-                // exit;
-                return redirect()->back()->with('success', 'Customer created, Please login.');
+
+                DB::commit();
+                return redirect('/banquet/all-venues');
             } catch (\Exception $e) {
+                DB::rollback();
                 return redirect()->back()->with('error', $e->getMessage());
             }
         } else {
@@ -272,22 +278,21 @@ class IndexController extends Controller
     public function customer_otp(Request $request)
     {
 
-        if ($request->isMethod('post')) {
-            $mobile = $request->mobile;
-            $customer = Customer::where("mobile", $mobile)->first();
-            if ($customer != '') {
-                $limit = 4;
-                $otp =  random_int(10 ** ($limit - 1), (10 ** $limit) - 1);
-                if ($customer->update(['otp' => $otp, 'is_used' => '0'])) {
-                    $request->session()->put('mobile', $mobile);
-                    $mobile = session()->get('mobile');
-                    return response()->json(array('text' => 'ok', 'mobile' => $mobile), 200);
-                }
+        $mobile = $request->mobile;
+        $password = $request->password;
+        // return $password;
+        // exit();
+        $customer = Customer::where('mobile', $mobile)->first();
+        if (!empty($customer)) {
+            if (Hash::check($password, $customer->password)) {
+                $cid = $customer['id'];
+                session()->put('cid', $cid);
+                return redirect('/banquet/all-venues');
             } else {
-                return redirect()->back()->with('error', 'Mobile no is not exist, please register.');
+                return redirect()->back()->with('error', 'Invalid Credential ,Please try again.');
             }
         } else {
-            return view('front.customer_login');
+            return redirect()->back()->with('error', 'Customer not registered please register.');
         }
     }
 
@@ -352,7 +357,7 @@ class IndexController extends Controller
         if ($id) {
             return view('front.customer_profile', compact('customer', 'bookings'));
         } else {
-            return redirect('/banquet');
+            return redirect('/banquet/login');
         }
     }
     public function edit_profile($id)
@@ -364,15 +369,42 @@ class IndexController extends Controller
 
     public function update_profile(Request $request)
     {
-        $data = $request->all();
+        // $data = $request->all();
+        $mobile = trim($request->mobile);
+        $email = trim($request->email_id);
+        $data['customer_name'] = $request->customer_name;
+        $data['email_id'] = $email;
+        $data['mobile'] = $mobile;
+        $data['password'] = Hash::make($request->password);
+        
+        DB::beginTransaction();
         try {
             $profile = Customer::where('id', $request->id)->first();
             $profile->update($data);
-
-            return redirect()->back()->with('success', 'profile successfully updated.');
+            DB::commit();
+            return redirect()->back()->with('success', 'Profile successfully updated.');
         } catch (\Exception $e) {
+            DB::rollback();
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
+
+    public function update_password(Request $request)
+    {
+        $data['password'] = Hash::make($request->password);
+        DB::beginTransaction();
+        try{
+            $profile = Customer::where('id', $request->id)->first();
+            $profile->update($data);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Password changed');
+
+        } catch (\Exception $e){
+            DB::rollback();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
     public function getIndianCurrency(float $number)
@@ -417,13 +449,44 @@ class IndexController extends Controller
 
     public function add_customer(Request $request)
     {
-        Customer::create($request->all());
-        return json_encode(array(
-            "statusCode" => 200
-        ));
+        if ($request->isMethod('post')) {
+            $mobile = trim($request->mobile);
+            $email = trim($request->email_id);
+            $mobileExist = Customer::where('mobile', $mobile)->get()->count();
+            $emailExist = Customer::where('email_id', $email)->get()->count();
+            if ($mobileExist > 0) {
+                $msg = "Mobile is already registered";
+                return redirect()->back()->with('error', $msg);
+            }
+            if ($emailExist > 0) {
+                $msg = "Email is already registered";
+                return redirect()->back()->with('error', $msg);
+            }
+            DB::beginTransaction();
+            try {
+                $password = Hash::make($request->password);
+                $data['customer_name'] = $request->customer_name;
+                $data['email_id'] = $email;
+                $data['mobile'] = $mobile;
+                $data['password'] = $password;
+
+                $save = new Customer($data);
+                $saveCust = $save->save();
+                $cid = $save->id;
+                session()->put('cid', $cid);
+
+                DB::commit();
+                return redirect('/banquet/all-venues');
+            } catch (\Exception $e) {
+                DB::rollback();
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Please try again');
+        }
     }
 
-  public function view_carts()
+    public function view_carts()
     {
         // dd(session()->has('p_details'));
         $main_menus = [];
@@ -434,7 +497,7 @@ class IndexController extends Controller
             if (session()->has('cart')) {
                 $cart = session()->get('cart');
                 $slug = session()->get('p_details');
-                $venue = Venue::where('slug',$slug['venue_slug'])->first();
+                $venue = Venue::where('slug', $slug['venue_slug'])->first();
                 $package_slug = $slug['package_slug'];
                 $searched_date = $slug['searched_date'];
                 $packages = Package::where('slug', $package_slug)->first();
@@ -451,11 +514,11 @@ class IndexController extends Controller
                     $data[$category->category_name]['limit'] = $packages->no_of_items[$key];
                     $main_menus = array_slice($cartValue, 0, $packages->no_of_items[$key]);
                     $extra_menus = array_slice($cartValue, $packages->no_of_items[$key]);
-                    
+
                     $countAllExtra = 0;
-                    if(!empty($extra_menus) && count($extra_menus) > 0){
+                    if (!empty($extra_menus) && count($extra_menus) > 0) {
                         $isExtra = 'yes';
-                    }else{
+                    } else {
                         $isExtra = 'no';
                     }
                     $total_limit = $total_limit + $packages->no_of_items[$key];
@@ -467,26 +530,25 @@ class IndexController extends Controller
                     $data[$category->category_name]['cat_id'] = Crypt::encrypt($key);
                     $data[$category->category_name]['package_id'] = Crypt::encrypt($packages->id);
 
-
-                    foreach($data[$category->category_name]['main_menus'] as $k=> $itemId){
+                    foreach ($data[$category->category_name]['main_menus'] as $k => $itemId) {
                         $vegitems = $this->findItem($itemId, 'Veg');
-                        if($vegitems != ''){
+                        if ($vegitems != '') {
                             $data[$category->category_name]['veg']['main_menu'][$itemId] =  $vegitems;
                         }
                         $nonvegitems = $this->findItem($itemId, 'Non-veg');
-                        if($nonvegitems != ''){
+                        if ($nonvegitems != '') {
                             $data[$category->category_name]['nonveg']['main_menu'][$itemId] =  $nonvegitems;
                         }
                     }
 
-                    foreach($data[$category->category_name]['extra_menus'] as $itemId){
+                    foreach ($data[$category->category_name]['extra_menus'] as $itemId) {
                         $vegitems = $this->findItem($itemId, 'Veg');
-                        if($vegitems != ''){
+                        if ($vegitems != '') {
                             $data[$category->category_name]['veg']['extra_menus'][$itemId] =  $vegitems;
                         }
 
                         $nonvegitems = $this->findItem($itemId, 'Non-veg');
-                        if($nonvegitems != ''){
+                        if ($nonvegitems != '') {
                             $data[$category->category_name]['nonveg']['extra_menus'][$itemId] =  $nonvegitems;
                         }
                     }
@@ -494,15 +556,15 @@ class IndexController extends Controller
                     $data[$category->category_name]['extra_Item_price'] = ($packages->custom_fields[$key]['price'] ?? 0) * count($extra_menus);
                     $data[$category->category_name]['countAllExtra'] = count($extra_menus);
                     $total_extra = $total_extra + count($extra_menus);
-                    }
-                    $toatl_limit_with_extra = $total_limit + $total_extra;
-                    $others['total_limit'] = $total_limit;
-                    $others['toatl_limit_with_extra'] = $toatl_limit_with_extra;
-                    $others['package'] = $packages;
-                    $others['extra_all_items_price'] = $extra_items_price;
-                    $others['venue_id'] = $venue->id;
-                    $others['customer'] = $customer;
-                    $others['searched_date'] = $searched_date;
+                }
+                $toatl_limit_with_extra = $total_limit + $total_extra;
+                $others['total_limit'] = $total_limit;
+                $others['toatl_limit_with_extra'] = $toatl_limit_with_extra;
+                $others['package'] = $packages;
+                $others['extra_all_items_price'] = $extra_items_price;
+                $others['venue_id'] = $venue->id;
+                $others['customer'] = $customer;
+                $others['searched_date'] = $searched_date;
             } else {
                 $others = [];
                 $data = [];
@@ -511,7 +573,8 @@ class IndexController extends Controller
                 return view('front.cart', compact('data', 'others'));
             } else {
                 return view('front.cart_view');
-            }        } else {
+            }
+        } else {
             return redirect('/banquet/login');
         }
     }
@@ -519,8 +582,8 @@ class IndexController extends Controller
     public function findItem($id, $type)
     {
         $data = '';
-        $item = Menu::where(['id'=> $id,'menu_type'=> $type])->select('id','name')->first();
-        if(!empty($item)){
+        $item = Menu::where(['id' => $id, 'menu_type' => $type])->select('id', 'name')->first();
+        if (!empty($item)) {
             $data = $item->name;
         }
 
@@ -573,9 +636,8 @@ class IndexController extends Controller
             session()->forget('cart');
             session()->forget('p_details');
             return view('front.thankyou');
-            } else {
+        } else {
             return redirect('/banquet');
         }
-           
     }
 }

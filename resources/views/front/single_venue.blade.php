@@ -20,7 +20,8 @@
                                     @foreach ($venue->venueimage as $key => $val)
                                     <div class="carousel-inner">
                                         <div class="carousel-item @if ($loop->first) active @endif">
-                                            <img src="/storage/images/venues/{{ $val->image }}" alt="{{ $venue->venue_name }}" style="width:100%;height:300px;">
+                                            <img src="/storage/images/venues/{{ $val->image }}"
+                                                alt="{{ $venue->venue_name }}" style="width:100%;height:300px;">
                                         </div>
                                     </div>
                                     @endforeach
@@ -42,20 +43,22 @@
                                     {{ $venue->venue_name }}
                                 </h5>
                                 @if (!empty($venue->custom_fields))
-                                <p class="text-dark">{{ $venue->custom_fields['setting'] ?? '' }}
-                                    seating | {{ $venue->custom_fields['floating'] ?? '' }}
+                                <p class="text-dark pb-2" id="sf">{{ $venue->custom_fields['setting'] ?? '' }}
+                                    Seating | {{ $venue->custom_fields['floating'] ?? '' }}
                                     Floating
                                 </p>
                                 @endif
                                 <p class="text-justify text-dark">
-                                    {{ $venue->custom_fields['address'] ?? '' }}
+                                    {{ Str::words($venue->custom_fields['address'] ?? '', 50, ' ...')}}
                                 </p>
                                 <div class="row">
                                     @if (!empty($venue->amenity_datas))
                                     @foreach ($venue->amenity_datas as $key => $val)
-                                    <div class="col-md-1 col-sm-2 col-2 m-1 text-center " style="color: #ff5b61;">
+                                    <div class="col-md-1 col-sm-2 col-2 m-2 text-center "
+                                        style="color: #ff5b61; font-size: 25px;">
                                         @if (!empty($val->icon))
-                                        <div data-bs-toggle="tooltip" data-bs-placement="top" title="{{$val->amenity_name}}">
+                                        <div data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="{{$val->amenity_name}}">
                                             {!! $val->icon !!}
                                         </div>
                                         @endif
@@ -77,10 +80,22 @@
 
     <!-- Dynamically generated content -->
     <div class="glry">
-        <div class="container p-l">
-            <div class="row no-gutters ">
+        <div class="container-fluid">
+            <div class="d-flex  flex-row">
+               <div class="col-md-8 m-auto  text-center">
+                    @if ($message = Session::get('error'))
+                        <div class="alert  alert-block" style="background-color: #ff5a60; font-size: 13px;">
+                            <button type="button" class="close text-white" data-dismiss="alert">×</button>
+                            <span style="color: #fff;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>  {{ $message }}  <a class="button text-danger mx-2 bg-light" href="/banquet/cart">Check out</a></span>
+                        </div>
+                    @endif
+                </div> 
+            </div>
+            <div class="row no-gutters">
+
                 @if (!empty($venue->package_datas))
                 @foreach ($venue->package_datas as $key => $val)
+                @if($val->status == 1)
                 <div class="col-md-6">
                     <a href="/banquet/{{ $venue->slug }}/{{ $val->slug }}/{{$searched_date}}">
                         <div class="gallery-box" id="galleryy-box">
@@ -100,15 +115,15 @@
                                 <div class="menus">
                                     <h5>Choose from:</h5>
                                     <div class="row">
-                                        <div class="col-12">Welcomes Drinks</div>
+                                        {{-- <div class="col-12">Welcomes Drinks</div> --}}
                                         @foreach ($val->package_items as $k => $v)
                                         <div class="col-sm-3 col-3">
-                                            <ul>
+                                            <ul style="margin: 0px 1px !important;">
                                                 <li class="text-dark">{{ $k }}</li>
                                             </ul>
                                         </div>
                                         <div class="col-sm-3 col-3">
-                                            <ul>
+                                            <ul style="margin: 0px 1px !important;">
                                                 <li class="text-dark">{{ $v }}</li>
                                             </ul>
                                         </div>
@@ -121,6 +136,7 @@
                         </div>
                     </a>
                 </div>
+                @endif
                 @endforeach
                 @endif
             </div>
@@ -128,24 +144,26 @@
 
         <div class="container">
             <div class="row mt-4">
-                <div class="col-md-11 m-auto acc ">
-                    <h3 class="faq">FaQs</h3>
+                <div class="col-md-12 m-auto acc ">
+                    <h3 class="faq mx-2">Faqs</h3>
                     @if (!empty($faq))
                     @foreach ($faq as $k => $v)
-                    <button class="accordion" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" onclick="changeIcon(this)">{{ $v->title }}<i class="material-symbols-outlined fa fa-plus"></i></button>
+                    <button class="accordion" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                        aria-expanded="false" aria-controls="collapseOne" onclick="changeIcon(this)">{{ $v->title }}<i
+                            class="material-symbols-outlined fa fa-plus pt-1"></i></button>
 
                     <div class="panel">
                         <p>{!! $v->content !!}</p>
                     </div>
                     @endforeach
-
                     @endif
                 </div>
             </div>
         </div>
 
         <div class="text-center mt-4 mb-4">
-            <button type="button" class="button  btnn mb-4 " data-toggle="modal" data-target="#myModal2" data-whatever="@mdo">WRITE A REVIEW</button>
+            <button type="button" class="button  btnn mb-4 " data-toggle="modal" data-target="#myModal2"
+                data-whatever="@mdo">WRITE A REVIEW</button>
         </div>
     </div>
     <!------------------------------------- SECOND SECTION END HERE -------------------------------->
@@ -153,12 +171,14 @@
 
     <!------------------------------------- MODAL START HERE -------------------------------->
 
-    <div class="modal fade bs-example-modal-lg" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade bs-example-modal-lg" id="myModal2" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg" id="mode" role="document">
             <div class="modal-content">
                 <div class="text-center">
                     <h4 class="text-danger text-danger md-h">TELL US YOUR EXPERIENCE!</h4>
-                    <button type=" button" class="close md-hh" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type=" button" class="close md-hh" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
@@ -168,7 +188,8 @@
 
                                     <div class=" col-sm-6  col-md-3 col-6">
                                         <label for="example-text-input" id="demo" class="col-form-label">Name</label>
-                                        <input class=" frm-cnt form-control" name="customer_name" id="customer_name" type="text" required>
+                                        <input class=" frm-cnt form-control" name="customer_name" id="customer_name"
+                                            type="text" required>
                                     </div>
 
                                     <div class=" col-sm-6  col-md-3 col-6">
@@ -181,7 +202,8 @@
                                     </div>
                                     <div class="col-sm-6 col-md-3 col-6">
                                         <label for="example-text-input" class="col-form-label">Anniversary</label>
-                                        <input class=" frm-cnt form-control" name="anniversary" id="anniversary" type="date">
+                                        <input class=" frm-cnt form-control" name="anniversary" id="anniversary"
+                                            type="date">
                                     </div>
                                 </div>
 
@@ -190,14 +212,16 @@
                                     <div class="col-md-3 col-sm-6 col-6">
                                         <p class="text-danger">Staff</p>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="staff" value="Polite" id="staff">
+                                            <input class="form-check-input" type="radio" name="staff" value="Polite"
+                                                id="staff">
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Polite
                                             </label>
                                         </div>
 
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="staff" value="Unmannerly" id="staff">
+                                            <input class="form-check-input" type="radio" name="staff" value="Unmannerly"
+                                                id="staff">
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Unmannerly
                                             </label>
@@ -207,7 +231,8 @@
                                     <div class="col-md-3 col-sm-6 col-6">
                                         <p class="text-danger">Service</p>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="service" value="Efficient" id="service">
+                                            <input class="form-check-input" type="radio" name="service"
+                                                value="Efficient" id="service">
                                             <span class="form-check-label" for="flexRadioDefault1">
                                                 Efficient
                                             </span>
@@ -215,7 +240,8 @@
 
 
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="service" value=" Needs work" id="service">
+                                            <input class="form-check-input" type="radio" name="service"
+                                                value=" Needs work" id="service">
                                             <span class="form-check-label" for="flexRadioDefault1">
                                                 Needs work
                                             </span>
@@ -225,14 +251,16 @@
                                     <div class="col-md-3 col-sm-6 col-6">
                                         <p class="text-danger">Vibe</p>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="vibe" value="Gorgeous" id="vibe">
+                                            <input class="form-check-input" type="radio" name="vibe" value="Gorgeous"
+                                                id="vibe">
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Gorgeous
                                             </label>
                                         </div>
 
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="vibe" value="Uninspiring" id="vibe">
+                                            <input class="form-check-input" type="radio" name="vibe" value="Uninspiring"
+                                                id="vibe">
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Uninspiring
                                             </label>
@@ -243,14 +271,16 @@
                                         <p class="text-danger"> Cleanliness</p>
 
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="cleanliness" value="Spotless" id="cleanliness">
+                                            <input class="form-check-input" type="radio" name="cleanliness"
+                                                value="Spotless" id="cleanliness">
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Spotless
                                             </label>
                                         </div>
 
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="cleanliness" value="Messy" id="cleanliness">
+                                            <input class="form-check-input" type="radio" name="cleanliness"
+                                                value="Messy" id="cleanliness">
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Messy
                                             </label>
@@ -264,26 +294,30 @@
                                     <div class="col-sm-3 col-3">
                                         <p class="text-danger">Excellent</p>
                                         <label class="radio-inline">
-                                            <input type="radio" name="food_quality" id="food_quality" class="rounded-checkbox" value="Excellent">
+                                            <input type="radio" name="food_quality" id="food_quality"
+                                                class="rounded-checkbox" value="Excellent">
                                         </label>
 
                                     </div>
                                     <div class="col-sm-3 col-3">
                                         <p class="text-danger">Good</p>
                                         <label class="radio-inline">
-                                            <input type="radio" name="food_quality" id="food_quality" class="rounded-checkbox" value="Good">
+                                            <input type="radio" name="food_quality" id="food_quality"
+                                                class="rounded-checkbox" value="Good">
                                         </label>
                                     </div>
                                     <div class="col-sm-3 col-3">
                                         <p class="text-danger">Adequate</p>
                                         <span class="radio-inline">
-                                            <input type="radio" name="food_quality" id="food_quality" class="rounded-checkbox" value="Adequate">
+                                            <input type="radio" name="food_quality" id="food_quality"
+                                                class="rounded-checkbox" value="Adequate">
                                         </span>
                                     </div>
                                     <div class="col-sm-3 col-3">
                                         <p class="text-danger"> Poor</p>
                                         <span class="radio-inline">
-                                            <input type="radio" name="food_quality" id="food_quality" class="rounded-checkbox" value="Poor">
+                                            <input type="radio" name="food_quality" id="food_quality"
+                                                class="rounded-checkbox" value="Poor">
                                         </span>
                                     </div>
                                 </div>
@@ -291,7 +325,8 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="delight_or_disapoint" value="Yay all the Way!" id="delight_or_disapoint">
+                                            <input class="form-check-input" type="radio" name="delight_or_disapoint"
+                                                value="Yay all the Way!" id="delight_or_disapoint">
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Yay all the Way!
                                             </label>
@@ -299,7 +334,8 @@
                                     </div>
                                     <div class="col-md-5">
                                         <span class="form-check">
-                                            <input class="form-check-input" type="radio" name="delight_or_disapoint" value="Meh." id="delight_or_disapoint">
+                                            <input class="form-check-input" type="radio" name="delight_or_disapoint"
+                                                value="Meh." id="delight_or_disapoint">
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Meh.
 
@@ -308,15 +344,15 @@
 
                                     </div>
                                 </div>
-
-
                                 <div class="row g-3 align-items-center">
                                     <div class="col-auto">
                                         <label for="inputPassword6" class="col-form-label">How did you hear
                                             about Altius ?</label>
                                     </div>
                                     <div class="col-md-6 col-10">
-                                        <input type="text" placeholder="Write Something ..." required class="form-control frm-cnt" name="about_altius" id="about_altius" aria-describedby="passwordHelpInline">
+                                        <input type="text" placeholder="Write Something ..." required
+                                            class="form-control frm-cnt" name="about_altius" id="about_altius"
+                                            aria-describedby="passwordHelpInline">
                                     </div>
                                     <div class="col-md-12">
                                         <label for="example-text-input" class="col-form-label">Would you like to
@@ -324,14 +360,16 @@
                                             our team who stood out and provided exceptional service? </label>
                                     </div>
                                     <div class="col-md-8 col-10">
-                                        <input class="form-control frm-cnt" placeholder="Write Something ..." required type="text" name="staff_service_exp" id="staff_service_exp">
+                                        <input class="form-control frm-cnt" placeholder="Write Something ..." required
+                                            type="text" name="staff_service_exp" id="staff_service_exp">
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="col-md-2 m-auto ">
+
+                                <div class="col-md-6 m-auto" style="text-align: center;">
                                     <button class="button btnn mt-4" id="butsave">Submit</button>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -339,16 +377,17 @@
         </div>
     </div>
     <!------------------------------------- MODAL END HERE -------------------------------->
-
-
     <style>
-        body.modal-open {
-            overflow-x: hidden;
-        }
+    body.modal-open {
+        overflow-x: hidden;
+    }
     </style>
 </main>
+
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
+
+    
     $('#butsave').on('click', function() {
         var customer_name = $('#customer_name').val();
         var room_no = $('#room_no').val();
@@ -425,6 +464,8 @@
         }
 
     });
+
+
 
     function changeIcon(anchor) {
         var icon = anchor.querySelector("i");

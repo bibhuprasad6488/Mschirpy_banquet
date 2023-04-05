@@ -239,6 +239,7 @@ Route::prefix('banquet')->group(function () {
     Route::get('/cart', 'Front\IndexController@view_carts');
     Route::get('/edit_profile/{id}', 'Front\IndexController@edit_profile');
     Route::post('/update_profile', 'Front\IndexController@update_profile');
+    Route::post('/update_password', 'Front\IndexController@update_password');
     Route::get('/admin', 'Front\IndexController@admin_index');
     Route::post('/login/otp', 'Front\IndexController@customer_otp');
     Route::get('/otp', 'Front\IndexController@otp_index');
