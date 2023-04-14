@@ -174,4 +174,57 @@ class TestingController extends Controller
       dd(json_encode($arr));
     }
 
+    public function nnnn()
+    {
+        $to = 'bibhu.prasad6488@gmail.com';
+        $to_names = 'Bibhu Prasad';
+        $subject = 'For Testing Purpose';
+        $text = 'Testing Success';
+      $r = $this->send_grid_email($to, $to_names, $subject, $text, $attachment = null, $filename = null);
+      dd($r);
+    }
+
+  public  function send_grid_email($to, $to_names, $subject, $text, $attachment = null, $filename = null)
+{
+
+    // echo $to.$to_names.$subject; die;
+   
+    $curl = curl_init();
+    $params = array();
+    $params['api_user'] = "harminderEMX";
+    $params['api_key'] = "Harminder@123";
+    $params['from'] = "noreply@mschirpy.com";
+    $params['subject'] = $subject;
+    $params['html'] = stripcslashes($text);
+
+    $params['to'] = $to;
+
+    $params['toname'] = $to_names;
+
+    if (!empty($attachment)) {
+
+        $imagedata = file_get_contents($attachment);
+
+        $params['files[' . $filename . ']'] = $imagedata;
+    }
+
+
+
+    $query = http_build_query($params);
+
+    curl_setopt_array($curl, array(CURLOPT_URL => "https://api.sendgrid.com/api/mail.send.json", CURLOPT_HEADER => false, CURLOPT_SSLVERSION => 'CURL_SSLVERSION_TLSv1_2', CURLOPT_RETURNTRANSFER => true, CURLOPT_ENCODING => "", CURLOPT_MAXREDIRS => 10, CURLOPT_TIMEOUT => 300, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => "POST", CURLOPT_POSTFIELDS => $query, CURLOPT_HTTPHEADER => array("cache-control: no-cache",),));
+
+
+
+    $response = curl_exec($curl);
+
+    $err = curl_error($curl);
+
+
+
+    curl_close($curl);
+
+    return true;
+}
+
 }

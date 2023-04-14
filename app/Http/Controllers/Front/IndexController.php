@@ -14,6 +14,7 @@ use App\Models\Booking;
 use App\Models\Package;
 use App\Models\Menu;
 use App\Models\Customer;
+use App\Models\Cuisine;
 use App\Models\Page;
 use App\Models\Event;
 use App\Models\Category;
@@ -102,9 +103,9 @@ class IndexController extends Controller
 
     public function singlle_package($venue_slug, $package_slug, $searched_date, $cart_cat_id = null, $cart_package_id = null)
     {
-        if($cart_cat_id == null){
-         session()->forget('cart');
-         session()->forget('p_details');
+        if ($cart_cat_id == null) {
+            session()->forget('cart');
+            session()->forget('p_details');
         }
         $id =  session()->get('cid');
         if ($id) {
@@ -118,20 +119,27 @@ class IndexController extends Controller
             $package = Package::where('slug', $package_slug)->first();
             if (!empty($package->no_of_items)) {
                 $cats = Category::whereIn('id', array_keys((array) $package->no_of_items))->get();
+                $m_cats = $cats;
             } else {
                 $cats = [];
+                $m_cats = [];
             }
             // dd($cats);
             $contents = ContentManagement::where('page_id', 8)->first();
             $data['contents'] = $contents;
             $data['package'] = $package;
             $data['cats'] = $cats;
+            $data['m_cats'] = $m_cats;
             if ($cart_cat_id != null && $cart_package_id != null) {
                 $data['cart_cat_id'] = Crypt::decrypt($cart_cat_id);
                 $data['cart_package_id'] = Crypt::decrypt($cart_package_id);
+                $data['m_cart_cat_id'] = Crypt::decrypt($m_cart_cat_id);
+                $data['m_cart_package_id'] = Crypt::decrypt($m_cart_package_id);
             } else {
                 $data['cart_cat_id'] = null;
                 $data['cart_package_id'] = null;
+                $data['m_cart_cat_id'] = null;
+                $data['m_cart_package_id'] = null;
             }
             return view('front.single_package', $data);
         } else {
@@ -200,6 +208,73 @@ class IndexController extends Controller
             }
         }
         return ['menu_arr' => $menu_arr, 'item_counts' => $itemCount];
+    }
+
+
+    public function show_catwise_cuisines(Request $request)
+    {
+        $cat_id  = $request->cat_id;
+        $package_id = $request->package_id;
+        $ftype = $request->ftype;
+        $category_data = Category::where('id', $cat_id)->first();
+        $allmenus_with_arr = $this->__m_cuisine_wise_item($category_data, $request->search);
+        $package_data = Package::where('id', $request->package_id)->first();
+        $cuisines =  $category_data->cuisines_id;
+        if (session()->has('cart')) {
+            $crt_data = session()->get('cart');
+        } else {
+            $crt_data = [];
+        }
+
+        $m_renderData = view('front.mobileitems')->with(['cuisines' =>  $cuisines, 'package_id' => $package_id, 'cat_id' => $cat_id, 'ftype' => $ftype, 'crt_data' => $crt_data])->render();
+        $data['category_data'] = $category_data;
+        $data['m_renderData'] = $m_renderData;
+        // $data['cuisines'] = $cuisine_datas;
+        return  $data;
+    }
+
+
+    public function show_cusineswise_items(Request $request)
+    {
+        $cat_id = $request->cat_id;
+        $cuisines_id = $request->cuisines_id;
+        $food_type = $request->ftype;
+        $package_id = $request->package_id;
+        // return $food_type;
+        $package_data = Package::where('id', $package_id)->first();
+        $category_data = Category::where('id', $cat_id)->first();
+        if (session()->has('cart')) {
+            $m_crt_data = session()->get('cart');
+        } else {
+            $m_crt_data = [];
+        }
+        $cus_name = Cuisine::where('id', $cuisines_id)->first();
+        $veg_items = Menu::where('category_id', $cat_id)->where('cuisine_id', $cuisines_id)->where('menu_type', $food_type)->get();
+        $countItems = $veg_items->count();
+        $m_catlimit = $package_data->no_of_items[$request->cat_id];
+        $m_mealcourses = $package_data->no_of_items[$request->cat_id] ."/" . $countItems;
+        // $menu_arr['veg'] = $veg_items;
+        $m_itemsRenderData = view('front.itemsData')->with(['veg_items' => $veg_items,'m_crt_data' => $m_crt_data, 'cat_id' =>  $cat_id, 'm_catlimit' => $m_catlimit ])->render();
+        $data['countItems'] = $countItems;
+        $data['m_mealcourses'] = $m_mealcourses;
+        $data['package_id'] = $package_id;
+        $data['cat_name'] = $category_data->category_name;
+        $data['veg_items'] = $veg_items;
+        $data['cus_name'] = $cus_name;
+        $data['food_type'] = $food_type;
+        $data['m_itemsRenderData'] = $m_itemsRenderData;
+        if ($package_data->no_of_items[$request->cat_id] != '') {
+            $data['m_qtyVal'] = $this->getIndianCurrency($package_data->no_of_items[$request->cat_id]);
+        } else {
+            $data['m_qtyVal'] = '';
+        }
+        $data['m_catlimit'] = $package_data->no_of_items[$request->cat_id];
+
+        return $data;
+    }
+
+    private function __m_cuisine_wise_item($category_data, $search_data)
+    {
     }
 
 
@@ -376,7 +451,7 @@ class IndexController extends Controller
         $data['email_id'] = $email;
         $data['mobile'] = $mobile;
         $data['password'] = Hash::make($request->password);
-        
+
         DB::beginTransaction();
         try {
             $profile = Customer::where('id', $request->id)->first();
@@ -393,18 +468,16 @@ class IndexController extends Controller
     {
         $data['password'] = Hash::make($request->password);
         DB::beginTransaction();
-        try{
+        try {
             $profile = Customer::where('id', $request->id)->first();
             $profile->update($data);
 
             DB::commit();
             return redirect()->back()->with('success', 'Password changed');
-
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', $e->getMessage());
         }
-
     }
 
     public function getIndianCurrency(float $number)

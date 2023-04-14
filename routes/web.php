@@ -27,6 +27,7 @@ Route::get('/addPermission', 'TestingController@addPermission');
 Route::get('/testdate', 'TestingController@testdate');
 
 Route::get('/testFor', 'TestingController@testFor');
+Route::get('/send_test_mail', 'TestingController@nnnn');
 
 Auth::routes();
 
@@ -249,6 +250,8 @@ Route::prefix('banquet')->group(function () {
     Route::get('/venue/{slug}/{date}', 'Front\IndexController@venue');
     Route::get('/{venue_slug}/{package_slug}/{date}/{cat_id?}/{package_id?}', 'Front\IndexController@singlle_package');
     Route::post('/showitems_cat', 'Front\IndexController@showitems_cat');
+    Route::post('/show_catwise_cuisines', 'Front\IndexController@show_catwise_cuisines');
+    Route::post('/show_cusineswise_items', 'Front\IndexController@show_cusineswise_items');
     Route::post('/customer_store', 'Front\IndexController@customer_store');
     Route::post('/add_to_box', 'Front\OrderController@add_to_box');
     Route::post('/remove_to_box', 'Front\OrderController@remove_to_box');
